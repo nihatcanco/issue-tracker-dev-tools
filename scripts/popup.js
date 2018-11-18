@@ -1,10 +1,11 @@
-(function () {
+(function (global) {
 
     var pCommitMessagePreviewElement = document.getElementById('p-commit-message-preview');
     var txtCommitMessageElement = document.getElementById('txt-commit-message');
     var spanLoadingElement = document.getElementById('span-loading');
     var spanJiraVersionElement = document.getElementById('span-jira-version');
     var spanCharacterCount = document.getElementById('span-character-count');
+    var btnCopyToClipboard = document.getElementById('btn-copytoclipboard');
     var intervalId;
     var commitMessagePrepend;
     var commitMessage;
@@ -19,6 +20,12 @@
 
         updateCommitMessagePreview();
         //autoSizeTextArea(this);
+
+    });
+
+    btnCopyToClipboard.addEventListener('click', function() {
+
+        global.CopyToClipboard(commitMessage || commitMessagePrepend);
 
     });
 
