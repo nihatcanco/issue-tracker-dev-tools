@@ -1,0 +1,18 @@
+@font-face {
+    font-family: PoppinsRegular;
+    src: url(chrome-extension://__MSG_@@extension_id__/styles/fonts/Poppins-Regular.ttf);
+}
+
+@font-face {
+    font-family: PoppinsBold;
+    src: url(chrome-extension://__MSG_@@extension_id__/styles/fonts/Poppins-Bold.ttf);
+}
+
+.poppinsbold-test {
+    font-family: PoppinsBold;
+}
+
+.poppinsregular-test {
+    font-family: PoppinsRegular;
+}
+
