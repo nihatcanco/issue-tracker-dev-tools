@@ -1,0 +1,41 @@
+{
+  "background": {
+    "scripts": [
+      "scripts/libs/jquery-3.1.1.js"
+    ]
+  },
+  "manifest_version": 2,
+  "name": "Commit Message Generator Extension",
+  "version": "0.1",
+  "description": "A Google Chrome extension to generate automated commit messages with a predefined format.",
+  "browser_action": {
+    "default_popup": "popup.html",
+    "default_title": "Extension"
+  },
+  "content_scripts": [
+    {
+      "all_frames": false,
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "scripts/contents/content.js"
+      ],
+      "css": [
+        "styles/content.css"
+      ]
+    }
+  ],
+  "permissions": [
+    "storage",
+    "notifications",
+    "http://*/",
+    "https://*/",
+    "tabs",
+    "cookies",
+    "activeTab"
+  ],
+  "web_accessible_resources": [
+    "styles/fonts/*"
+  ]
+}
