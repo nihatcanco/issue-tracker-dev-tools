@@ -1,0 +1,28 @@
+@font-face {
+    font-family: PoppinsRegular;
+    src: url(chrome-extension://__MSG_@@extension_id__/styles/fonts/Poppins-Regular.ttf);
+}
+
+@font-face {
+    font-family: PoppinsBold;
+    src: url(chrome-extension://__MSG_@@extension_id__/styles/fonts/Poppins-Bold.ttf);
+}
+
+body {
+    font-family: PoppinsRegular;
+    min-width: 600px;
+}
+
+label {
+    font-family: PoppinsBold;
+}
+
+.container {
+    margin: 0;
+    padding: 15px;
+    max-width: unset;
+}
+
+#p-commit-message-preview {
+    min-height: 100px;
+}

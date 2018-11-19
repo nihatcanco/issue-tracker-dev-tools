@@ -3,38 +3,56 @@
     <title>Extension Title</title>
     <meta charset="utf-8">
     <link rel="stylesheet" href="styles/bootstrap400-dist/bootstrap.min.css" />
+    <link rel="stylesheet" href="styles/popup.css" />
 </head>
-<body style="width: 600px; height: 125px;">
-    
-    <div>
-        <span id="span-loading" style="display: none;">loading...</span>
+<body>
+
+    <div class="container">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <span id="span-loading" style="display: none;">loading...</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label for="txt-commit-message">Your commit message:</label>
+                    <textarea id="txt-commit-message" class="form-control" rows="4" max-rows="20" placeholder="Did this, did that etc." disabled="disabled" autofocus></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <label for="p-commit-message-preview">Preview:</label>
+                <pre id="p-commit-message-preview"></pre>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <button id="btn-copytoclipboard" class="btn btn-block">Copy to Clipboard</button>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="row">
+            <div class="col-sm-4">
+                <span id="span-character-count" style="font-style: italic;"></span>
+            </div>
+            <div class="col-sm-4 offset-sm-4" style="text-align: right;">
+                <span id="span-issue-tracker-type-version" style="font-style: italic; text-align: right;"></span>
+            </div>
+        </div>
     </div>
-
-    <div>
-        <h3>Your commit message:</h3>
-        <textarea id="txt-commit-message" style="width: 100%; resize: vertical;" rows="4" max-rows="20" placeholder="Did this, did that etc." disabled="disabled" autofocus></textarea>
-    </div>
-
-    <div>
-        <h3>Preview:</h3>
-        <p id="p-commit-message-preview"></p>
-    </div>
-
-    <br>
-    <hr>
-    <br>
-
-    <div>
-        <span id="span-character-count" style="font-style: italic;"></span>
-        <span id="span-jira-version"></span>
-        <button id="btn-copytoclipboard">Copy to Clipboard</button>
-    </div>
-
-    <br>
 
     <script src="scripts/libs/jquery-3.1.1.js"></script>
     <script src="scripts/libs/jquery-ui.min.js"></script>
     <script src="scripts/libs/bootstrap400-dist/bootstrap.min.js"></script>
+    <script src="scripts/libs/clipboard/clipboard.min.js"></script>
     <script src="scripts/libs/helper.js"></script>
     <script src="scripts/popup.js"></script>
 </body>
