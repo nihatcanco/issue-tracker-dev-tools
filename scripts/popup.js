@@ -2,7 +2,6 @@
 
     var pCommitMessagePreviewElement = document.getElementById('p-commit-message-preview');
     var txtCommitMessageElement = document.getElementById('txt-commit-message');
-    var spanLoadingElement = document.getElementById('span-loading');
     var spanIssueTrackerTypeVersion = document.getElementById('span-issue-tracker-type-version');
     var spanCharacterCount = document.getElementById('span-character-count');
     var btnCopyToClipboard = document.getElementById('btn-copytoclipboard');
@@ -34,10 +33,7 @@
     }
 
     function toggleLoadingView(doShow) {
-
-        txtCommitMessageElement.disabled = doShow;
-        spanLoadingElement.style.display = doShow ? 'block' : 'none';
-
+        global.TogglePleaseWait(doShow);
     }
 
     function requestIssueTrackerTypeVersion() {

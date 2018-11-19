@@ -9,12 +9,18 @@
 }
 
 body {
+    font-size: .9rem;
     font-family: PoppinsRegular;
     min-width: 600px;
+    background-color: #f8f9fa;
 }
 
 label {
     font-family: PoppinsBold;
+}
+
+textarea, button {
+    font-size: .8rem !important;
 }
 
 .container {
@@ -25,4 +31,8 @@ label {
 
 #p-commit-message-preview {
     min-height: 100px;
+}
+
+.loadingoverlay_fa .fa {
+    font-size: 50px !important;
 }

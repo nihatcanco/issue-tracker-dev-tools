@@ -1,25 +1,20 @@
-<html>
+﻿<html>
 <head>
     <title>Extension Title</title>
     <meta charset="utf-8">
     <link rel="stylesheet" href="styles/bootstrap400-dist/bootstrap.min.css" />
+    <link rel="stylesheet" href="styles/fontawesome-all.min.css" />
     <link rel="stylesheet" href="styles/popup.css" />
 </head>
 <body>
 
     <div class="container">
-
-        <div class="row">
-            <div class="col-sm-12">
-                <span id="span-loading" style="display: none;">loading...</span>
-            </div>
-        </div>
-
+        
         <div class="row">
             <div class="col-sm-12">
                 <div class="form-group">
                     <label for="txt-commit-message">Your commit message:</label>
-                    <textarea id="txt-commit-message" class="form-control" rows="4" max-rows="20" placeholder="Did this, did that etc." disabled="disabled" autofocus></textarea>
+                    <textarea id="txt-commit-message" class="form-control" rows="4" max-rows="20" placeholder="Did this, did that etc." autofocus></textarea>
                 </div>
             </div>
         </div>
@@ -52,7 +47,7 @@
     <script src="scripts/libs/jquery-3.1.1.js"></script>
     <script src="scripts/libs/jquery-ui.min.js"></script>
     <script src="scripts/libs/bootstrap400-dist/bootstrap.min.js"></script>
-    <script src="scripts/libs/clipboard/clipboard.min.js"></script>
+    <script src="scripts/libs/loadingoverlay.min.js"></script>
     <script src="scripts/libs/helper.js"></script>
     <script src="scripts/popup.js"></script>
 </body>
