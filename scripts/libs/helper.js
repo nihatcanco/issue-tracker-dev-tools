@@ -15,4 +15,23 @@
 
     };
 
+    global.TogglePleaseWait = function (doShow, element) {
+
+        let el = element ? $(element) : $;
+
+        if (doShow) {
+
+            el.LoadingOverlay("show", {
+                image: "",
+                fontawesome: "fa fa-cog fa-spin"
+            });
+
+        } else {
+
+            el.LoadingOverlay('hide');
+
+        }
+
+    };
+
 }(window));
