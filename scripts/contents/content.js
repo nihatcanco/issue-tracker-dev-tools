@@ -124,36 +124,19 @@
 
         const intervalData = setInterval(function () {
 
-            let navigatorContent = null;
-            let navigatorContents = document.getElementsByClassName('navigator-content');
-            let keyVal = document.getElementById('key-val');
+            let ticketNumberElement = document.getElementById('key-val');
+            let ticketTypeElement = document.getElementById('type-val');
+            let ticketSummaryElement = document.getElementById('summary-val');
 
-            if (navigatorContents) navigatorContent = navigatorContents[0];
-
-            if (!navigatorContent || !keyVal) return;
-
-            let dataIssueTableModelState = JSON.parse(navigatorContent.getAttribute('data-issue-table-model-state'));
-
-            if (!dataIssueTableModelState.issueTable || !dataIssueTableModelState.issueTable.table) return;
+            if (!ticketNumberElement || !ticketTypeElement || !ticketSummaryElement) return;
 
             clearInterval(intervalData);
 
-            let selectedIssue = null;
+            let ticketNumber = ticketNumberElement.textContent.trim();
+            let ticketType = ticketTypeElement.textContent.trim().toLowerCase();
+            let ticketSummary = ticketSummaryElement.textContent.trim().toLowerCase();
 
-            for (let i = 0; i < dataIssueTableModelState.issueTable.table.length; i++) {
-
-                let tableElement = dataIssueTableModelState.issueTable.table[i];
-
-                if (tableElement.key === keyVal.getAttribute('data-issue-key')) {
-                    selectedIssue = tableElement;
-                    break;
-                }
-
-            }
-
-            if (!selectedIssue) return;
-
-            commitMessage = selectedIssue.type.name.toLowerCase() + '(' + selectedIssue.key + '): ' + selectedIssue.summary + '\n\n';
+            commitMessage = ticketType + '(' + ticketNumber + '): ' + ticketSummary + '\n\n';
             textAreaCommitMessage.value = commitMessage;
             updateCharacterCount();
 
@@ -168,6 +151,8 @@
     }
 
     function copyToClipboard(text) {
+
+        text = text.trim();
 
         let textareaElement = document.createElement('textarea');
         textareaElement.value = text;
