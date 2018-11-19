@@ -2,7 +2,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
     if (request.message === 'getSelectedIssue') {
 
-
         let data = {};
         let navigatorContent = null;
         let navigatorContents = document.getElementsByClassName('navigator-content');
@@ -26,6 +25,15 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
             }
 
         }
+
+        sendResponse({ message: data });
+
+    } else if (request.message === 'getIssueTrackerTypeVersion') {
+
+        let data = {};
+
+        data.type = 'Dummy';
+        data.version = '1.0.0.0';
 
         sendResponse({ message: data });
 

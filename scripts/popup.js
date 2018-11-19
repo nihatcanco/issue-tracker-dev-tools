@@ -3,18 +3,13 @@
     var pCommitMessagePreviewElement = document.getElementById('p-commit-message-preview');
     var txtCommitMessageElement = document.getElementById('txt-commit-message');
     var spanLoadingElement = document.getElementById('span-loading');
-    var spanJiraVersionElement = document.getElementById('span-jira-version');
+    var spanIssueTrackerTypeVersion = document.getElementById('span-issue-tracker-type-version');
     var spanCharacterCount = document.getElementById('span-character-count');
     var btnCopyToClipboard = document.getElementById('btn-copytoclipboard');
-    var intervalId;
+    var intervalIssueTrackerType;
+    var intervalSelectedIssue;
     var commitMessagePrepend;
     var commitMessage;
-
-    chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-
-        debugger;
-
-    });
 
     txtCommitMessageElement.addEventListener('keyup', function () {
 
@@ -22,7 +17,7 @@
 
     });
 
-    btnCopyToClipboard.addEventListener('click', function() {
+    btnCopyToClipboard.addEventListener('click', function () {
 
         global.CopyToClipboard(commitMessage || commitMessagePrepend);
 
@@ -45,9 +40,24 @@
 
     }
 
-    function requestJiraVersion() {
+    function requestIssueTrackerTypeVersion() {
 
-        //spanJiraVersionElement
+        //spanIssueTrackerTypeVersion
+
+        intervalIssueTrackerType = window.setInterval(function () {
+
+            sendMessageToContentScript({ message: 'getIssueTrackerTypeVersion' }, function (response) {
+
+                console.log(response);
+
+                if (!response || !response.message) return;
+
+                window.clearInterval(intervalIssueTrackerType);
+                setIssueTrackerTypeVersion(response.message);
+
+            });
+
+        }, 1000);
 
     }
 
@@ -55,7 +65,7 @@
 
         toggleLoadingView(true);
 
-        intervalId = window.setInterval(function () {
+        intervalSelectedIssue = window.setInterval(function () {
 
             sendMessageToContentScript({ message: 'getSelectedIssue' }, function (response) {
 
@@ -63,13 +73,19 @@
 
                 if (!response || !response.message) return;
 
-                window.clearInterval(intervalId);
+                window.clearInterval(intervalSelectedIssue);
                 toggleLoadingView(false);
                 setCommitMessage(response.message);
 
             });
 
         }, 1000);
+
+    }
+
+    function setIssueTrackerTypeVersion(object) {
+
+        spanIssueTrackerTypeVersion.innerHTML = object.type + ' ' + object.version
 
     }
 
@@ -92,10 +108,12 @@
 
     function updateCharacterCount() {
 
-        spanCharacterCount.innerHTML = 'Character count: ' + (commitMessage ? commitMessage.length : commitMessagePrepend.length);
+        spanCharacterCount.innerHTML = 'Character count: ' + (commitMessage ? commitMessage.length : commitMessagePrepend ? commitMessagePrepend.length : '0');
 
     }
 
+    updateCharacterCount();
+    requestIssueTrackerTypeVersion();
     requestSelectedIssue();
 
 }(window));
