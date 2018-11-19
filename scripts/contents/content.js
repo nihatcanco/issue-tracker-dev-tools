@@ -10,6 +10,8 @@
 
     // UI elements
     var viewIssueSidebar;
+    var divModule;
+    var titleHeader;
     var textAreaCommitMessage;
     var buttonCopyToClipboard;
     var buttonReset;
@@ -27,27 +29,32 @@
 
             clearInterval(intervalInit);
 
-            createUi();
-            updateCharacterCount();
-            setEventListeners();
-            setData();
+            chrome.storage.sync.get(['isCommitMessageDivCollapsed'], function (result) {
 
-            isInitInProgress = false;
+                createUi(result.isCommitMessageDivCollapsed);
+                updateCharacterCount();
+                setEventListeners();
+                setData();
+
+                isInitInProgress = false;
+
+            });
 
         }, 500);
     }
 
-    function createUi() {
+    function createUi(isCollapsed) {
 
-        let divModule = document.createElement('div');
+        divModule = document.createElement('div');
         divModule.id = divModuleId;
-        divModule.className = 'module toggle-wrap';
+        divModule.className = 'module toggle-wrap' + (isCollapsed ? ' collapsed' : '');
 
         let divHeader = document.createElement('div');
         divHeader.id = 'commitmessagegenerator_heading';
         divHeader.className = 'mod-header';
 
-        let titleHeader = document.createElement('h2');
+        titleHeader = document.createElement('h2');
+        titleHeader.id = 'cm-title-header';
         titleHeader.className = 'toggle-title';
         titleHeader.appendChild(document.createTextNode('Commit Message'));
 
@@ -104,6 +111,12 @@
     }
 
     function setEventListeners() {
+
+        titleHeader.addEventListener('click', function () {
+            // Set collapsed status
+            let isCollapsed = !divModule.className.includes('collapsed');
+            chrome.storage.sync.set({ isCommitMessageDivCollapsed: isCollapsed }, function () { });
+        });
 
         textAreaCommitMessage.addEventListener('keyup', function () {
             commitMessage = textAreaCommitMessage.value;
