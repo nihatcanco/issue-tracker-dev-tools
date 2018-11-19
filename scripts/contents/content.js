@@ -134,7 +134,7 @@
 
             let ticketNumber = ticketNumberElement.textContent.trim();
             let ticketType = ticketTypeElement.textContent.trim().toLowerCase();
-            let ticketSummary = ticketSummaryElement.textContent.trim().toLowerCase();
+            let ticketSummary = ticketSummaryElement.textContent.trim();
 
             commitMessage = ticketType + '(' + ticketNumber + '): ' + ticketSummary + '\n\n';
             textAreaCommitMessage.value = commitMessage;
