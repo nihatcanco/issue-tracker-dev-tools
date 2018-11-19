@@ -11,7 +11,7 @@
 body {
     font-size: .9rem;
     font-family: PoppinsRegular;
-    min-width: 600px;
+    min-width: 200px;
     background-color: #f8f9fa;
 }
 
@@ -27,12 +27,4 @@ textarea, button {
     margin: 0;
     padding: 15px;
     max-width: unset;
-}
-
-#p-commit-message-preview {
-    min-height: 100px;
-}
-
-.loadingoverlay_fa .fa {
-    font-size: 50px !important;
 }
