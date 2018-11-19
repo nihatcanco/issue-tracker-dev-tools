@@ -15,6 +15,11 @@
 
     };
 
+    /**
+     * Shows/hides loading overlay.
+     * @param {any} doShow
+     * @param {any} element
+     */
     global.TogglePleaseWait = function (doShow, element) {
 
         let el = element ? $(element) : $;

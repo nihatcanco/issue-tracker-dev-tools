@@ -1,129 +1,189 @@
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+(function (global) {
 
-    if (request.message === 'getSelectedIssue') {
+    const document = global.document;
+    const setInterval = global.setInterval;
+    const clearInterval = global.clearInterval;
 
-        let data = {};
-        let navigatorContent = null;
-        let navigatorContents = document.getElementsByClassName('navigator-content');
-        let keyVal = document.getElementById('key-val');
+    var isInitInProgress = false;
+    var commitMessage = '';
+    var divModuleId = 'commitmessagegeneratormodule';
 
-        if (navigatorContents) navigatorContent = navigatorContents[0];
+    // UI elements
+    var viewIssueSidebar;
+    var textAreaCommitMessage;
+    var buttonCopyToClipboard;
+    var buttonRefresh;
+    var spanCharacterCount;
 
-        if (!navigatorContent || !keyVal) return;
+    function init() {
 
-        let dataIssueTableModelState = JSON.parse(navigatorContent.getAttribute('data-issue-table-model-state'));
+        isInitInProgress = true;
 
-        if (!dataIssueTableModelState.issueTable || !dataIssueTableModelState.issueTable.table) return;
+        const intervalInit = setInterval(function () {
 
-        for (let i = 0; i < dataIssueTableModelState.issueTable.table.length; i++) {
+            viewIssueSidebar = document.getElementById('viewissuesidebar');
 
-            let tableElement = dataIssueTableModelState.issueTable.table[i];
+            if (!viewIssueSidebar) return;
 
-            if (tableElement.key === keyVal.getAttribute('data-issue-key')) {
-                data = tableElement;
-                break;
-            }
+            clearInterval(intervalInit);
 
-        }
+            createUi();
+            updateCharacterCount();
+            setEventListeners();
+            setData();
 
-        sendResponse({ message: data });
+            isInitInProgress = false;
 
-    } else if (request.message === 'getIssueTrackerTypeVersion') {
+        }, 500);
+    }
 
-        let data = {};
+    function createUi() {
 
-        data.type = 'Dummy';
-        data.version = '1.0.0.0';
+        let divModule = document.createElement('div');
+        divModule.id = divModuleId;
+        divModule.className = 'module toggle-wrap';
 
-        sendResponse({ message: data });
+        let divHeader = document.createElement('div');
+        divHeader.id = 'commitmessagegenerator_heading';
+        divHeader.className = 'mod-header';
+
+        let titleHeader = document.createElement('h2');
+        titleHeader.className = 'toggle-title';
+        titleHeader.appendChild(document.createTextNode('Commit Message'));
+
+        let divContent = document.createElement('div');
+        divContent.className = 'mod-content';
+        divContent.style.marginBottom = '20px';
+
+        let ulItemDetails = document.createElement('ul');
+        ulItemDetails.className = 'item-details';
+
+        let li0 = document.createElement('li');
+
+        textAreaCommitMessage = document.createElement('textarea');
+        textAreaCommitMessage.style.width = '98%';
+        textAreaCommitMessage.style.resize = 'vertical';
+        textAreaCommitMessage.style.fontFamily = 'inherit';
+        textAreaCommitMessage.setAttribute('rows', '6');
+        textAreaCommitMessage.setAttribute('placeholder', 'Did this, did that etc...');
+
+        let li1 = document.createElement('li');
+        li1.style.marginTop = '0 !important';
+
+        spanCharacterCount = document.createElement('span');
+
+        buttonRefresh = document.createElement('span');
+        buttonRefresh.id = 'cm-button-refresh';
+        buttonRefresh.style.float = 'right';
+        buttonRefresh.style.cursor = 'pointer';
+        buttonRefresh.appendChild(document.createTextNode('Refresh'));
+
+        let li2 = document.createElement('li');
+
+        buttonCopyToClipboard = document.createElement('button');
+        buttonCopyToClipboard.style.width = '100%';
+        buttonCopyToClipboard.style.padding = '10px';
+        buttonCopyToClipboard.style.background = '#f5f5f5';
+        buttonCopyToClipboard.style.border = '1px solid #ccc';
+        buttonCopyToClipboard.style.cursor = 'pointer';
+        buttonCopyToClipboard.appendChild(document.createTextNode('Copy To Clipboard'));
+
+        divHeader.appendChild(titleHeader);
+        li0.appendChild(textAreaCommitMessage);
+        li1.appendChild(spanCharacterCount);
+        li1.appendChild(buttonRefresh);
+        li2.appendChild(buttonCopyToClipboard);
+        ulItemDetails.appendChild(li0);
+        ulItemDetails.appendChild(li1);
+        ulItemDetails.appendChild(li2);
+        divContent.appendChild(ulItemDetails);
+        divModule.appendChild(divHeader);
+        divModule.appendChild(divContent);
+        viewIssueSidebar.insertBefore(divModule, viewIssueSidebar.firstChild);
 
     }
 
-});
+    function setEventListeners() {
 
+        textAreaCommitMessage.addEventListener('keyup', function () {
+            commitMessage = textAreaCommitMessage.value;
+            updateCharacterCount();
+        });
 
+        buttonRefresh.addEventListener('click', function () {
+            setData();
+        });
 
+        buttonCopyToClipboard.addEventListener('click', function () {
+            copyToClipboard(commitMessage);
+        });
 
+    }
 
+    function setData() {
 
+        const intervalData = setInterval(function () {
 
+            let navigatorContent = null;
+            let navigatorContents = document.getElementsByClassName('navigator-content');
+            let keyVal = document.getElementById('key-val');
 
+            if (navigatorContents) navigatorContent = navigatorContents[0];
 
+            if (!navigatorContent || !keyVal) return;
 
+            let dataIssueTableModelState = JSON.parse(navigatorContent.getAttribute('data-issue-table-model-state'));
 
+            if (!dataIssueTableModelState.issueTable || !dataIssueTableModelState.issueTable.table) return;
 
+            clearInterval(intervalData);
 
+            let selectedIssue = null;
 
+            for (let i = 0; i < dataIssueTableModelState.issueTable.table.length; i++) {
 
+                let tableElement = dataIssueTableModelState.issueTable.table[i];
 
+                if (tableElement.key === keyVal.getAttribute('data-issue-key')) {
+                    selectedIssue = tableElement;
+                    break;
+                }
 
+            }
 
-//(function (global) {
+            if (!selectedIssue) return;
 
-//    //const manifestData = chrome.runtime.getManifest();
+            commitMessage = selectedIssue.type.name.toLowerCase() + '(' + selectedIssue.key + '): ' + selectedIssue.summary + '\n\n';
+            textAreaCommitMessage.value = commitMessage;
+            updateCharacterCount();
 
-//    /*var jiraLeftMenu = document.getElementById('navigation-app');
-//    var jiraLeftMenuWidth = jiraLeftMenu.offsetWidth;
-//    var jiraLeftMenuWidthPx = jiraLeftMenuWidth + 'px';
+        }, 500);
 
-//    var contentElement = document.createElement('div');
-//    contentElement.id = 'jce-contentbar';
-//    contentElement.style.width = 'calc(100% - ' + jiraLeftMenuWidthPx + ')';
-//    contentElement.style.height = '100px';
-//    contentElement.style.position = 'fixed';
-//    contentElement.style.background = 'green';
-//    contentElement.style.zIndex = '99999';
-//    contentElement.style.marginLeft = jiraLeftMenuWidthPx;
-//    contentElement.className = '';
+    }
 
-//    document.body.prepend(contentElement);*/
+    function updateCharacterCount() {
 
-//    /*
-//    // Get filter name & hrefs from dashboard view
-//    let list = document.getElementById('gadget-10003').getElementsByTagName('table')[0].getElementsByTagName('a');
-//    for(let i=0;i<list.length;i++){
-//        console.log(list[i].text + ' : ' + list[i].getAttribute('href'));
-//    }
-//    */
+        spanCharacterCount.innerHTML = 'Character count: ' + (commitMessage ? commitMessage.length : '0');
 
-//    var navigatorContent;
-//    var mutationObserver;
+    }
 
-//    function getValuesFromUi() {
+    function copyToClipboard(text) {
 
+        let textareaElement = document.createElement('textarea');
+        textareaElement.value = text;
+        document.body.appendChild(textareaElement);
+        textareaElement.select();
+        document.execCommand('copy');
+        document.body.removeChild(textareaElement);
 
-//    }
+    };
 
-//    function init() {
+    // Start initialization interval
+    const intervalDomChanges = setInterval(function () {
 
-//        var navigatorContents = global.document.getElementsByClassName('navigator-content');
-//        if (navigatorContents) navigatorContent = navigatorContents[0];
+        if (!document.getElementById(divModuleId) && !isInitInProgress)
+            init();
 
-//        mutationObserver = new global.MutationObserver(function (mutations) {
+    }, 1000);
 
-//            debugger;
-//            mutations.forEach(function (mutation) {
-
-//                for (let i = 0; i < mutation.addedNodes.length; i++) {
-
-//                    global.console.log('Added: ' + mutation.addedNodes[i].className);
-
-//                }
-
-//                for (let i = 0; i < mutation.removedNodes.length; i++) {
-
-//                    global.console.log('Removed: ' + mutation.removedNodes[i].className);
-
-//                }
-
-//            });
-
-//        });
-
-//        if (navigatorContent)
-//            mutationObserver.observe(navigatorContent, { attributes: true });
-//    }
-
-//    init();
-
-//}(window));
+}(window));
