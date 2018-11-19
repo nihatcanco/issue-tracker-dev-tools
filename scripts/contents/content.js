@@ -12,7 +12,7 @@
     var viewIssueSidebar;
     var textAreaCommitMessage;
     var buttonCopyToClipboard;
-    var buttonRefresh;
+    var buttonReset;
     var spanCharacterCount;
 
     function init() {
@@ -72,11 +72,11 @@
 
         spanCharacterCount = document.createElement('span');
 
-        buttonRefresh = document.createElement('span');
-        buttonRefresh.id = 'cm-button-refresh';
-        buttonRefresh.style.float = 'right';
-        buttonRefresh.style.cursor = 'pointer';
-        buttonRefresh.appendChild(document.createTextNode('Refresh'));
+        buttonReset = document.createElement('span');
+        buttonReset.id = 'cm-button-refresh';
+        buttonReset.style.float = 'right';
+        buttonReset.style.cursor = 'pointer';
+        buttonReset.appendChild(document.createTextNode('Reset'));
 
         let li2 = document.createElement('li');
 
@@ -91,7 +91,7 @@
         divHeader.appendChild(titleHeader);
         li0.appendChild(textAreaCommitMessage);
         li1.appendChild(spanCharacterCount);
-        li1.appendChild(buttonRefresh);
+        li1.appendChild(buttonReset);
         li2.appendChild(buttonCopyToClipboard);
         ulItemDetails.appendChild(li0);
         ulItemDetails.appendChild(li1);
@@ -110,7 +110,7 @@
             updateCharacterCount();
         });
 
-        buttonRefresh.addEventListener('click', function () {
+        buttonReset.addEventListener('click', function () {
             setData();
         });
 
