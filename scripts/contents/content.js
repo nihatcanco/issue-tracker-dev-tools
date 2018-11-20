@@ -68,31 +68,24 @@
         let li0 = document.createElement('li');
 
         textAreaCommitMessage = document.createElement('textarea');
-        textAreaCommitMessage.style.width = '98%';
-        textAreaCommitMessage.style.resize = 'vertical';
-        textAreaCommitMessage.style.fontFamily = 'inherit';
+        textAreaCommitMessage.id = 'cm-textarea-commit-message';
+        //textAreaCommitMessage.autofocus = true;
         textAreaCommitMessage.setAttribute('rows', '6');
         textAreaCommitMessage.setAttribute('placeholder', 'Did this, did that etc...');
 
         let li1 = document.createElement('li');
-        li1.style.marginTop = '0 !important';
+        li1.style.marginTop = '0';
 
         spanCharacterCount = document.createElement('span');
 
         buttonReset = document.createElement('span');
-        buttonReset.id = 'cm-button-refresh';
-        buttonReset.style.float = 'right';
-        buttonReset.style.cursor = 'pointer';
+        buttonReset.id = 'cm-button-reset';
         buttonReset.appendChild(document.createTextNode('Reset'));
 
         let li2 = document.createElement('li');
 
         buttonCopyToClipboard = document.createElement('button');
-        buttonCopyToClipboard.style.width = '100%';
-        buttonCopyToClipboard.style.padding = '10px';
-        buttonCopyToClipboard.style.background = '#f5f5f5';
-        buttonCopyToClipboard.style.border = '1px solid #ccc';
-        buttonCopyToClipboard.style.cursor = 'pointer';
+        buttonCopyToClipboard.id = 'cm-button-cpoy-to-clipboard';
         buttonCopyToClipboard.appendChild(document.createTextNode('Copy To Clipboard'));
 
         divHeader.appendChild(titleHeader);
