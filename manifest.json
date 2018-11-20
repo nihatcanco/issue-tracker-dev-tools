@@ -11,21 +11,12 @@
   "description": "A Google Chrome extension to generate automated commit messages with a predefined format.",
   "browser_action": {
     "default_popup": "popup.html",
-    "default_title": "Extension"
+    "default_title": ""
   },
   "icons": {
     "16": "images/icon16.png",
     "48": "images/icon48.png",
     "128": "images/icon128.png"
-  },
-  "commands": {
-    "_execute_browser_action": {
-      "suggested_key": {
-        "default": "Alt+Shift+C",
-        "mac": "Alt+Shift+C"
-      },
-      "description": "Opens index.html"
-    }
   },
   "content_scripts": [
     {
