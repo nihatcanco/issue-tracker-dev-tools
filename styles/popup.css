@@ -9,9 +9,9 @@
 }
 
 body {
-    font-size: .9rem;
+    font-size: .8rem;
     font-family: PoppinsRegular;
-    min-width: 200px;
+    min-width: 600px;
     background-color: #f8f9fa;
 }
 
@@ -19,8 +19,8 @@ label {
     font-family: PoppinsBold;
 }
 
-textarea, button {
-    font-size: .8rem !important;
+textarea, button, input {
+    font-size: .7rem !important;
 }
 
 .container {
