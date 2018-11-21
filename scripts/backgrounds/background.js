@@ -1,4 +1,4 @@
-var commitMessageFormatDefault = '{TICKET_TYPE}({TICKET_NUMBER}): {TICKET_SUMMARY}{NEWLINE}{NEWLINE}';
+var commitMessageFormatDefault = '{LOWERCASE}{TICKET_TYPE}{/LOWERCASE}({UPPERCASE}{TICKET_NUMBER}{/UPPERCASE}): {TICKET_SUMMARY}{NEWLINE}{NEWLINE}';
 
 chrome.runtime.onInstalled.addListener(function (details) {
 
