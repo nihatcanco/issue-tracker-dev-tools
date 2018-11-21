@@ -39,8 +39,6 @@
   "permissions": [
     "storage",
     "notifications",
-    "http://*/",
-    "https://*/",
     "tabs",
     "cookies",
     "activeTab"
