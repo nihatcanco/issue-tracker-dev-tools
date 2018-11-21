@@ -27,6 +27,7 @@
       "js": [
         "scripts/libs/jquery-3.1.1.js",
         "scripts/libs/jquery-ui.min.js",
+        "scripts/libs/helper.js",
         "scripts/contents/content.js"
       ],
       "css": [

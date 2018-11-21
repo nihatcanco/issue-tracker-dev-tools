@@ -9,19 +9,6 @@
     var commitMessageFormat = '';
     var divModuleId = 'commitmessagegeneratormodule';
 
-    var ticketEnum =
-    {
-        TICKET_TYPE: '{TICKET_TYPE}',
-        TICKET_NUMBER: '{TICKET_NUMBER}',
-        TICKET_SUMMARY: '{TICKET_SUMMARY}',
-        TICKET_DESCRIPTION: '{TICKET_DESCRIPTION}',
-        NEWLINE: '{NEWLINE}',
-        UPPERCASE_START: '{UPPERCASE}',
-        UPPERCASE_END: '{UPPERCASE}',
-        LOWERCASE_START: '{LOWERCASE}',
-        LOWERCASE_END: '{LOWERCASE}'
-    }
-
     // UI elements
     var viewIssueSidebar;
     var divModule;
@@ -83,7 +70,6 @@
 
         textAreaCommitMessage = document.createElement('textarea');
         textAreaCommitMessage.id = 'cm-textarea-commit-message';
-        //textAreaCommitMessage.autofocus = true;
         textAreaCommitMessage.setAttribute('rows', '6');
         textAreaCommitMessage.setAttribute('placeholder', 'Did this, did that etc...');
 
@@ -163,7 +149,7 @@
                 let ticketNumber = ticketNumberElement.textContent.trim();
                 let ticketSummary = ticketSummaryElement.textContent.trim();
 
-                commitMessage = getFormattedCommitMessage(ticketType, ticketNumber, ticketSummary);
+                commitMessage = global.GetFormattedCommitMessage(commitMessageFormat, ticketType, ticketNumber, ticketSummary);
                 textAreaCommitMessage.value = commitMessage;
                 updateCharacterCount();
 
@@ -191,34 +177,6 @@
         document.body.removeChild(textareaElement);
 
     };
-
-    function getFormattedCommitMessage(ticketType, ticketNumber, ticketSummary, ticketDescription) {
-
-        let formattedCommitMessage = commitMessageFormat;
-
-        while (formattedCommitMessage.includes(ticketEnum.TICKET_TYPE))
-            formattedCommitMessage = formattedCommitMessage.replace(ticketEnum.TICKET_TYPE, ticketType);
-
-        while (formattedCommitMessage.includes(ticketEnum.TICKET_NUMBER))
-            formattedCommitMessage = formattedCommitMessage.replace(ticketEnum.TICKET_NUMBER, ticketNumber);
-
-        while (formattedCommitMessage.includes(ticketEnum.TICKET_SUMMARY))
-            formattedCommitMessage = formattedCommitMessage.replace(ticketEnum.TICKET_SUMMARY, ticketSummary);
-
-        while (formattedCommitMessage.includes(ticketEnum.TICKET_DESCRIPTION))
-            formattedCommitMessage = formattedCommitMessage.replace(ticketEnum.TICKET_DESCRIPTION, ticketDescription);
-
-        while (formattedCommitMessage.includes(ticketEnum.NEWLINE))
-            formattedCommitMessage = formattedCommitMessage.replace(ticketEnum.NEWLINE, '\n');
-
-        // TODO: implement following tags
-        //commitMessage = commitMessage.replace(ticketEnum.UPPERCASE_START, '');
-        //commitMessage = commitMessage.replace(ticketEnum.UPPERCASE_END, '');
-        //commitMessage = commitMessage.replace(ticketEnum.LOWERCASE_START, '');
-        //commitMessage = commitMessage.replace(ticketEnum.LOWERCASE_END, '');
-
-        return formattedCommitMessage;
-    }
 
     // Start initialization interval
     const intervalDomChanges = setInterval(function () {
