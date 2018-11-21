@@ -7,7 +7,7 @@
         TICKET_TYPE: '{TICKET_TYPE}',
         TICKET_NUMBER: '{TICKET_NUMBER}',
         TICKET_SUMMARY: '{TICKET_SUMMARY}',
-        TICKET_DESCRIPTION: '{TICKET_DESCRIPTION}',
+        //TICKET_DESCRIPTION: '{TICKET_DESCRIPTION}',
         NEWLINE: '{NEWLINE}',
         UPPERCASE_START: '{UPPERCASE}',
         UPPERCASE_END: '{/UPPERCASE}',
@@ -44,9 +44,9 @@
             formattedCommitMessage = formattedCommitMessage.replace(global.TicketEnum.TICKET_SUMMARY, ticketSummary);
         }
 
-        while (formattedCommitMessage.includes(global.TicketEnum.TICKET_DESCRIPTION)) {
-            formattedCommitMessage = formattedCommitMessage.replace(global.TicketEnum.TICKET_DESCRIPTION, ticketDescription);
-        }
+        //while (formattedCommitMessage.includes(global.TicketEnum.TICKET_DESCRIPTION)) {
+        //    formattedCommitMessage = formattedCommitMessage.replace(global.TicketEnum.TICKET_DESCRIPTION, ticketDescription);
+        //}
 
         while (formattedCommitMessage.includes(global.TicketEnum.NEWLINE)) {
             formattedCommitMessage = formattedCommitMessage.replace(global.TicketEnum.NEWLINE, '\n');
