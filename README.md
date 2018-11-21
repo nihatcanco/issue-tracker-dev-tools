@@ -1,4 +1,4 @@
-# Commit Message Generator Chrome Extension
+# Commit Message Generator Chrome Extension (BETA)
 
 A Google Chrome extension to generate automated commit messages with a predefined format. Currently, it only supports Atlassian JIRA.
 
