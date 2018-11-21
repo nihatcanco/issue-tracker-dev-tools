@@ -92,8 +92,9 @@
 
         spanCharacterCount = document.createElement('span');
 
-        buttonReset = document.createElement('span');
+        buttonReset = document.createElement('a');
         buttonReset.id = 'cm-button-reset';
+        buttonReset.className = 'switcher-item';
         buttonReset.appendChild(document.createTextNode('Reset'));
 
         let li2 = document.createElement('li');
