@@ -23,29 +23,33 @@
      * @param {any} ticketSummary
      * @param {any} ticketDescription
      */
-    global.GetFormattedCommitMessage = function (
-        commitMessageFormat,
-        ticketType = 'type',
-        ticketNumber = 'ABCDEFG-123',
-        ticketSummary = 'This is the ticket summary',
-        ticketDescription = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque semper magna sed ullamcorper malesuada. Aenean lacinia tincidunt est, vel vestibulum turpis venenatis vel.') {
+    global.GetFormattedCommitMessage = function (commitMessageFormat, selectedTicket) {
+
+        if (!selectedTicket) {
+            selectedTicket = {
+                type: 'type',
+                number: 'ABCDEFG-123',
+                summary: 'This is the ticket summary',
+                description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque semper magna sed ullamcorper malesuada. Aenean lacinia tincidunt est, vel vestibulum turpis venenatis vel.'
+            }
+        }
 
         let formattedCommitMessage = commitMessageFormat;
 
         while (formattedCommitMessage.includes(global.TicketEnum.TICKET_TYPE)) {
-            formattedCommitMessage = formattedCommitMessage.replace(global.TicketEnum.TICKET_TYPE, ticketType);
+            formattedCommitMessage = formattedCommitMessage.replace(global.TicketEnum.TICKET_TYPE, selectedTicket.type);
         }
 
         while (formattedCommitMessage.includes(global.TicketEnum.TICKET_NUMBER)) {
-            formattedCommitMessage = formattedCommitMessage.replace(global.TicketEnum.TICKET_NUMBER, ticketNumber);
+            formattedCommitMessage = formattedCommitMessage.replace(global.TicketEnum.TICKET_NUMBER, selectedTicket.number);
         }
 
         while (formattedCommitMessage.includes(global.TicketEnum.TICKET_SUMMARY)) {
-            formattedCommitMessage = formattedCommitMessage.replace(global.TicketEnum.TICKET_SUMMARY, ticketSummary);
+            formattedCommitMessage = formattedCommitMessage.replace(global.TicketEnum.TICKET_SUMMARY, selectedTicket.summary);
         }
 
         //while (formattedCommitMessage.includes(global.TicketEnum.TICKET_DESCRIPTION)) {
-        //    formattedCommitMessage = formattedCommitMessage.replace(global.TicketEnum.TICKET_DESCRIPTION, ticketDescription);
+        //    formattedCommitMessage = formattedCommitMessage.replace(global.TicketEnum.TICKET_DESCRIPTION, selectedTicket.description);
         //}
 
         while (formattedCommitMessage.includes(global.TicketEnum.NEWLINE)) {

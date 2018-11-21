@@ -4,7 +4,13 @@
     const setInterval = global.setInterval;
     const clearInterval = global.clearInterval;
 
-    var selectedTicket = {};
+    var selectedTicket = {
+        type: '',
+        number: '',
+        summary: '',
+        description: ''
+    };
+
     var isInitInProgress = false;
     var commitMessage = '';
     var commitMessageFormat = '';
@@ -147,12 +153,13 @@
                 }
 
                 selectedTicket = {
-                    ticketType: ticketTypeElement.textContent.trim().toLowerCase(),
-                    ticketNumber: ticketNumberElement.textContent.trim(),
-                    ticketSummary: ticketSummaryElement.textContent.trim()
+                    type: ticketTypeElement.textContent.trim().toLowerCase(),
+                    number: ticketNumberElement.textContent.trim(),
+                    summary: ticketSummaryElement.textContent.trim(),
+                    description: ''
                 }
 
-                commitMessage = global.GetFormattedCommitMessage(commitMessageFormat, selectedTicket.ticketType, selectedTicket.ticketNumber, selectedTicket.ticketSummary);
+                commitMessage = global.GetFormattedCommitMessage(commitMessageFormat, selectedTicket);
                 textAreaCommitMessage.value = commitMessage;
                 updateCharacterCount();
 
