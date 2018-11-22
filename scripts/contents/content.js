@@ -78,7 +78,7 @@
         textAreaCommitMessage = document.createElement('textarea');
         textAreaCommitMessage.id = 'cm-textarea-commit-message';
         textAreaCommitMessage.setAttribute('rows', '6');
-        textAreaCommitMessage.setAttribute('placeholder', 'Did this, did that etc...');
+        textAreaCommitMessage.setAttribute('placeholder', 'Loading...');
 
         let li1 = document.createElement('li');
         li1.style.marginTop = '0';
