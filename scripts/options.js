@@ -5,10 +5,17 @@
     var inputCommitMessageFormat = document.getElementById('cm-input-commit-message-format');
     var spanCommitMessageFormatPreview = document.getElementById('cm-input-commit-message-format-preview');
     var buttonSaveCommitMessageFormat = document.getElementById('cm-btn-save-commit-message-format');
+    var spanTitleText = document.getElementById('cm-span-title-text');
+    var spanFooterText = document.getElementById('cm-footer-text');
 
+    var timerInputCommitMessageFormatKeyUp;
     var commitMessageFormat = '';
 
     function init() {
+
+        document.title = global.Manifest.name;
+        spanTitleText.innerHTML = 'for ' + global.Manifest.name;
+        spanFooterText.innerHTML = global.Manifest.name + '<br>v' + global.Manifest.version;
 
         inputCommitMessageFormat.value = commitMessageFormat;
 
@@ -20,7 +27,7 @@
 
     function updateCommitMessageFormatPreview() {
 
-        spanCommitMessageFormatPreview.innerHTML = global.ReplaceNewLinesToBr(global.GetFormattedCommitMessage(commitMessageFormat));
+        spanCommitMessageFormatPreview.innerText = global.GetFormattedCommitMessage(commitMessageFormat);
 
     };
 
@@ -42,8 +49,13 @@
 
         inputCommitMessageFormat.addEventListener('keyup', function () {
 
-            commitMessageFormat = inputCommitMessageFormat.value;
-            updateCommitMessageFormatPreview();
+            clearTimeout(timerInputCommitMessageFormatKeyUp);
+            timerInputCommitMessageFormatKeyUp = setTimeout(function () {
+
+                commitMessageFormat = inputCommitMessageFormat.value;
+                updateCommitMessageFormatPreview();
+
+            }, 500);
 
         });
 
@@ -60,7 +72,7 @@
     // Init
     chrome.storage.sync.get(['commitMessageFormat'], function (result) {
 
-        if (result && result.commitMessageFormat) {
+        if (result) {
             commitMessageFormat = result.commitMessageFormat;
         }
 
