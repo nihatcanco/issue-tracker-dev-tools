@@ -23,7 +23,6 @@ body {
     font-family: "Roboto";
     font-weight: 400;
     font-size: .8rem;
-    min-width: 600px;
     background-color: #f8f9fa;
 }
 
@@ -33,10 +32,4 @@ label {
 
 textarea, button, input {
     font-size: .7rem !important;
-}
-
-.container {
-    margin: 0;
-    padding: 15px;
-    max-width: unset;
 }

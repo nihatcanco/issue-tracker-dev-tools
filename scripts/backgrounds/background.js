@@ -14,3 +14,31 @@ chrome.runtime.onInstalled.addListener(function (details) {
     });
 
 });
+
+function openOrFocusOptionsPage() {
+
+    var optionsUrl = chrome.extension.getURL('options.html');
+
+    chrome.tabs.query({}, function (extensionTabs) {
+
+        let found = false;
+
+        for (let i = 0; i < extensionTabs.length; i++) {
+            if (optionsUrl == extensionTabs[i].url) {
+                found = true;
+                chrome.tabs.update(extensionTabs[i].id, { "selected": true });
+            }
+        }
+
+        if (!found) {
+            chrome.tabs.create({ url: "options.html" });
+        }
+
+    });
+
+}
+
+// Called when the user clicks on the browser action icon.
+chrome.browserAction.onClicked.addListener(function (tab) {
+    openOrFocusOptionsPage();
+});
