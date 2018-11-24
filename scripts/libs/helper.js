@@ -1,13 +1,17 @@
 (function (global) {
 
     /**
+     * The manifest.json object.
+     */
+    global.Manifest = chrome.runtime.getManifest();
+
+    /**
      * Ticket formatting tags.
      */
     global.TicketEnum = {
         TICKET_TYPE: '{TICKET_TYPE}',
         TICKET_NUMBER: '{TICKET_NUMBER}',
         TICKET_SUMMARY: '{TICKET_SUMMARY}',
-        //TICKET_DESCRIPTION: '{TICKET_DESCRIPTION}',
         NEWLINE: '{NEWLINE}',
         UPPERCASE_START: '{UPPERCASE}',
         UPPERCASE_END: '{/UPPERCASE}',
@@ -17,11 +21,8 @@
 
     /**
      * Formats the given commit message with the given format string.
-     * @param {any} commitMessageFormat
-     * @param {any} ticketType
-     * @param {any} ticketNumber
-     * @param {any} ticketSummary
-     * @param {any} ticketDescription
+     * @param {string} commitMessageFormat
+     * @param {any} selectedTicket
      */
     global.GetFormattedCommitMessage = function (commitMessageFormat, selectedTicket) {
 
@@ -48,10 +49,6 @@
             formattedCommitMessage = formattedCommitMessage.replace(global.TicketEnum.TICKET_SUMMARY, selectedTicket.summary);
         }
 
-        //while (formattedCommitMessage.includes(global.TicketEnum.TICKET_DESCRIPTION)) {
-        //    formattedCommitMessage = formattedCommitMessage.replace(global.TicketEnum.TICKET_DESCRIPTION, selectedTicket.description);
-        //}
-
         while (formattedCommitMessage.includes(global.TicketEnum.NEWLINE)) {
             formattedCommitMessage = formattedCommitMessage.replace(global.TicketEnum.NEWLINE, '\n');
         }
@@ -71,15 +68,6 @@
         }
 
         return formattedCommitMessage;
-    };
-
-    /**
-     * Replaces \n to <br /> in the given string.
-     * @param {any} string
-     */
-    global.ReplaceNewLinesToBr = function (string) {
-
-        return string.replace(/\n/g, "<br />");
     };
 
     /**
