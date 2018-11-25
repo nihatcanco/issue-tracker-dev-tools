@@ -11,6 +11,8 @@
     var spanFooterText = document.getElementById('cm-footer-text');
     var checkboxShowCommitMessageBox = document.getElementById('cm-checkbox-show-commit-message-box');
     var checkboxShowBranchNameBox = document.getElementById('cm-checkbox-show-branch-name-box');
+    var alertCommitMessageBoxVisibility = document.getElementById('cm-alert-commit-message-box-visibility');
+    var alertBranchNameBoxVisibility = document.getElementById('cm-alert-branch-name-box-visibility');
 
     var timerInputCommitMessageFormatKeyUp;
     var timerInputBranchNameFormatKeyUp;
@@ -35,6 +37,9 @@
 
             checkboxShowCommitMessageBox.checked = result.commitMessageBoxVisible;
             checkboxShowBranchNameBox.checked = result.branchNameBoxVisible;
+
+            alertCommitMessageBoxVisibility.hidden = checkboxShowCommitMessageBox.checked;
+            alertBranchNameBoxVisibility.hidden = checkboxShowBranchNameBox.checked;
 
             updateCommitMessageFormatPreview();
             updateBranchNameFormatPreview();
@@ -75,13 +80,13 @@
 
         checkboxShowCommitMessageBox.addEventListener('click', function () {
 
-            //alert(checkboxShowCommitMessageBox.checked);
+            alertCommitMessageBoxVisibility.hidden = checkboxShowCommitMessageBox.checked;
 
         });
 
         checkboxShowBranchNameBox.addEventListener('click', function () {
 
-            //alert(checkboxShowBranchNameBox.checked);
+            alertBranchNameBoxVisibility.hidden = checkboxShowBranchNameBox.checked;
 
         });
 
