@@ -18,14 +18,14 @@
 
             commitMessageBox: {
                 divModuleId: 'commitmessagegeneratormodule',
-                visible: false,
+                visible: true,
                 collapsed: false,
                 format: ''
             },
 
             branchNameBox: {
                 divModuleId: 'branchnamegeneratormodule',
-                visible: false,
+                visible: true,
                 collapsed: false,
                 format: ''
             }
@@ -38,7 +38,7 @@
 
             const intervalDomChanges = setInterval(function () {
 
-                if (document.getElementById('viewissuesidebar') && (!document.getElementById(app.options.commitMessageBox.divModuleId) || !document.getElementById(app.options.branchNameBox.divModuleId)) && !isInitInProgress) {
+                if (document.getElementById('viewissuesidebar') && ((!document.getElementById(app.options.commitMessageBox.divModuleId) && app.options.commitMessageBox.visible) || (!document.getElementById(app.options.branchNameBox.divModuleId) && app.options.branchNameBox.visible)) && !isInitInProgress) {
 
                     isInitInProgress = true;
 
