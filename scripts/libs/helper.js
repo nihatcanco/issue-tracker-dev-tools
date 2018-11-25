@@ -76,12 +76,14 @@
      */
     global.CopyToClipboard = function (text) {
 
-        let textareaElement = document.createElement('textarea');
+        text = text.trim();
+
+        let textareaElement = global.document.createElement('textarea');
         textareaElement.value = text;
-        document.body.appendChild(textareaElement);
+        global.document.body.appendChild(textareaElement);
         textareaElement.select();
-        document.execCommand('copy');
-        document.body.removeChild(textareaElement);
+        global.document.execCommand('copy');
+        global.document.body.removeChild(textareaElement);
 
     };
 
