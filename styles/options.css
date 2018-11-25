@@ -30,8 +30,12 @@ label {
     font-weight: 700;
 }
 
-textarea, input, div[contenteditable="true"] {
+textarea, table, input {
     font-size: inherit !important
+}
+
+td {
+    padding: 4px 10px;
 }
 
 #cm-span-title-text {
