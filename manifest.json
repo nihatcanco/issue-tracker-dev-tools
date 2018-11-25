@@ -48,6 +48,7 @@
     "activeTab"
   ],
   "web_accessible_resources": [
+    "styles/webfonts/*",
     "styles/fonts/*"
   ]
 }
