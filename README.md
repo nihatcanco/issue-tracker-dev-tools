@@ -1,4 +1,4 @@
-# Commit Message Generator Chrome Extension (BETA)
+# Git Helper Tools - Chrome Extension (BETA)
 
 A Google Chrome extension that contains tools for software developers.
 
