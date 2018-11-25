@@ -1,6 +1,9 @@
 (function (global) {
 
-    var document = global.document;
+    const document = global.document;
+    const setTimeout = global.setTimeout;
+    const clearTimeout = global.clearTimeout;
+
     var ulTicketTags = document.getElementById('cm-ul-ticket-tags');
     var inputCommitMessageFormat = document.getElementById('cm-input-commit-message-format');
     var inputBranchNameFormat = document.getElementById('cm-input-branch-name-format');
