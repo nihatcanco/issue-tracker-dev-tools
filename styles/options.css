@@ -41,3 +41,7 @@ td {
 #cm-span-title-text {
     font-size: 1.2rem;
 }
+
+.alert {
+    margin-bottom: 0;
+}
