@@ -16,14 +16,38 @@
         </h2>
 
         <div class="row">
-            <div class="col-md-12">
 
-                <h4>Available Tags</h4>
+            <div class="col-md-8">
+
+                <h4>Features</h4>
+                <div class="card mb-4">
+                    <div class="card-body">
+
+                        <ul style="list-style-type: none; padding: 0;">
+
+                            <li>TODO:</li>
+                            <li>Show Commit Message box (checkbox)</li>
+                            <li>Show branch name box (checkbox)</li>
+
+                        </ul>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <h4>Tags</h4>
                 <div class="card mb-4">
                     <div class="card-body">
                         <ul id="cm-ul-ticket-tags" style="list-style-type: none; padding: 0;"></ul>
                     </div>
                 </div>
+
+            </div>
+
+            <div class="col-md-12">
 
                 <h4>Commit Message Options</h4>
                 <div class="card mb-4">
@@ -36,9 +60,29 @@
                     </div>
                 </div>
 
+            </div>
+
+            <div class="col-md-12">
+
+                <h4>Branch Name Options</h4>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h6>Format:</h6>
+                        <input id="cm-input-branch-name-format" type="text" class="form-control">
+                        <br>
+                        <h6>Preview:</h6>
+                        <span id="cm-input-branch-name-format-preview"></span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-md-12">
+
                 <button id="cm-btn-save-commit-message-format" class="btn btn-primary btn-block mb-4">Save</button>
 
             </div>
+
         </div>
     </div>
 
