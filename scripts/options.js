@@ -9,6 +9,8 @@
     var buttonSaveOptions = document.getElementById('cm-btn-save-commit-message-format');
     var spanTitleText = document.getElementById('cm-span-title-text');
     var spanFooterText = document.getElementById('cm-footer-text');
+    var checkboxShowCommitMessageBox = document.getElementById('cm-checkbox-show-commit-message-box');
+    var checkboxShowBranchNameBox = document.getElementById('cm-checkbox-show-branch-name-box');
 
     var timerInputCommitMessageFormatKeyUp;
     var timerInputBranchNameFormatKeyUp;
@@ -17,17 +19,29 @@
 
     function init() {
 
-        document.title = global.Manifest.name;
-        spanTitleText.innerHTML = 'for ' + global.Manifest.name;
-        spanFooterText.innerHTML = global.Manifest.name + '<br>v' + global.Manifest.version;
+        chrome.storage.sync.get(['commitMessageBoxVisible', 'branchNameBoxVisible', 'isCommitMessageDivCollapsed', 'isBranchNameDivCollapsed', 'commitMessageFormat', 'branchNameFormat'], function (result) {
 
-        inputCommitMessageFormat.value = commitMessageFormat;
-        inputBranchNameFormat.value = branchNameFormat;
+            if (result) {
+                commitMessageFormat = result.commitMessageFormat;
+                branchNameFormat = result.branchNameFormat;
+            }
 
-        updateCommitMessageFormatPreview();
-        updateBranchNameFormatPreview();
-        updateTagsList();
-        setEventHandlers();
+            document.title = global.Manifest.name;
+            spanTitleText.innerHTML = 'for ' + global.Manifest.name;
+            spanFooterText.innerHTML = global.Manifest.name + '<br>v' + global.Manifest.version;
+
+            inputCommitMessageFormat.value = commitMessageFormat;
+            inputBranchNameFormat.value = branchNameFormat;
+
+            checkboxShowCommitMessageBox.checked = result.commitMessageBoxVisible;
+            checkboxShowBranchNameBox.checked = result.branchNameBoxVisible;
+
+            updateCommitMessageFormatPreview();
+            updateBranchNameFormatPreview();
+            updateTagsList();
+            setEventHandlers();
+
+        });
 
     }
 
@@ -59,6 +73,18 @@
 
     function setEventHandlers() {
 
+        checkboxShowCommitMessageBox.addEventListener('click', function () {
+
+            //alert(checkboxShowCommitMessageBox.checked);
+
+        });
+
+        checkboxShowBranchNameBox.addEventListener('click', function () {
+
+            //alert(checkboxShowBranchNameBox.checked);
+
+        });
+
         inputCommitMessageFormat.addEventListener('keyup', function () {
 
             clearTimeout(timerInputCommitMessageFormatKeyUp);
@@ -85,7 +111,7 @@
 
         buttonSaveOptions.addEventListener('click', function () {
 
-            chrome.storage.sync.set({ commitMessageFormat: commitMessageFormat, branchNameFormat: branchNameFormat }, function () {
+            chrome.storage.sync.set({ commitMessageFormat: commitMessageFormat, branchNameFormat: branchNameFormat, commitMessageBoxVisible: checkboxShowCommitMessageBox.checked, branchNameBoxVisible: checkboxShowBranchNameBox.checked }, function () {
                 alert('Options saved! Please reload your page to see the changes.');
             });
 
@@ -93,15 +119,6 @@
 
     }
 
-    // Init
-    chrome.storage.sync.get(['commitMessageFormat', 'branchNameFormat'], function (result) {
-
-        if (result) {
-            commitMessageFormat = result.commitMessageFormat;
-            branchNameFormat = result.branchNameFormat;
-        }
-
-        init();
-    });
+    init();
 
 }(window));
