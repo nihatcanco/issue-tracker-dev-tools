@@ -11,6 +11,9 @@
             type: '',
             number: '',
             summary: '',
+            assignee: '',
+            priority: '',
+            storyPoints: '',
             description: ''
         },
 
@@ -78,12 +81,17 @@
                                 ghxSelectedPrimary = ghxSelectedPrimaryList[0];
                             }
 
-                            let ticketNumberElement = document.getElementById('key-val');
                             let ticketTypeElement = document.getElementById('type-val');
+                            let ticketNumberElement = document.getElementById('key-val');
                             let ticketSummaryElement = document.getElementById('summary-val');
-                            let assigneeElement = document.getElementById('assignee-val');
+                            let ticketAssigneeElement = document.getElementById('assignee-val');
+                            let ticketPriorityElement = document.getElementById('priority-val');
+                            let ticketStoryPointsElement = document.getElementById('customfieldmodule');
+                            ticketStoryPointsElement = ticketStoryPointsElement ? ticketStoryPointsElement.querySelector('strong[title="Story Points"]') : null;
+                            ticketStoryPointsElement = ticketStoryPointsElement ? ticketStoryPointsElement.nextElementSibling : null;
+                            let ticketDescriptionElement = document.getElementById('description-val');
 
-                            if (!ghxSelectedPrimary && (!ticketNumberElement || !ticketTypeElement || !ticketSummaryElement || !assigneeElement)) return;
+                            if (!ghxSelectedPrimary && (!ticketTypeElement || !ticketNumberElement || !ticketSummaryElement || !ticketAssigneeElement || !ticketPriorityElement || !ticketDescriptionElement)) return;
 
                             clearInterval(intervalData);
 
@@ -92,12 +100,18 @@
                                 app.selectedTicket.number = ghxSelectedPrimary.getElementsByClassName('ghx-key')[0].getAttribute('title');
                                 app.selectedTicket.summary = ghxSelectedPrimary.getElementsByClassName('ghx-inner')[0].textContent;
                                 app.selectedTicket.assignee = ghxSelectedPrimary.getElementsByClassName('ghx-avatar-img')[0].getAttribute('alt').split(': ')[1];
+                                app.selectedTicket.priority = ghxSelectedPrimary.getElementsByClassName('ghx-priority')[0].getAttribute('title');
+                                app.selectedTicket.storyPoints = ghxSelectedPrimary.querySelector('span[title="Story Points"]').textContent.trim();
+                                app.selectedTicket.description = '';
                             }
                             else {
                                 app.selectedTicket.type = ticketTypeElement.textContent.trim().toLowerCase();
                                 app.selectedTicket.number = ticketNumberElement.textContent.trim();
                                 app.selectedTicket.summary = ticketSummaryElement.textContent.trim();
-                                app.selectedTicket.assignee = assigneeElement.childNodes[1].textContent.trim();
+                                app.selectedTicket.assignee = ticketAssigneeElement.childNodes[1].textContent.trim();
+                                app.selectedTicket.priority = ticketPriorityElement.textContent.trim();
+                                app.selectedTicket.storyPoints = ticketStoryPointsElement ? ticketStoryPointsElement.textContent.trim() : '';
+                                app.selectedTicket.description = ticketDescriptionElement.textContent.trim();
                             }
 
                             // Ordering is backwards
