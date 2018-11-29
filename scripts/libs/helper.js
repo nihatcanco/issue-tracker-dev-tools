@@ -13,6 +13,9 @@
         TICKET_NUMBER: '{TICKET_NUMBER}',
         TICKET_SUMMARY: '{TICKET_SUMMARY}',
         TICKET_ASSIGNEE: '{TICKET_ASSIGNEE}',
+        TICKET_PRIORITY: '{TICKET_PRIORITY}',
+        TICKET_STORYPOINTS: '{TICKET_STORYPOINTS}',
+        TICKET_DESCRIPTION: '{TICKET_DESCRIPTION}',
         NEWLINE: '{NEWLINE}',
         UPPERCASE_START: '{UPPERCASE}',
         UPPERCASE_END: '{/UPPERCASE}',
@@ -33,11 +36,15 @@
                 number: 'ABCDEFG-123',
                 summary: 'This is the ticket summary',
                 assignee: 'John Doe',
+                priority: 'Major',
+                storyPoints: '',
                 description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque semper magna sed ullamcorper malesuada. Aenean lacinia tincidunt est, vel vestibulum turpis venenatis vel.'
             }
         }
 
         let formattedCommitMessage = commitMessageFormat;
+
+        selectedTicket.description = selectedTicket.description.replace('Click to add description', '');
 
         while (formattedCommitMessage.includes(global.TicketEnum.TICKET_TYPE)) {
             formattedCommitMessage = formattedCommitMessage.replace(global.TicketEnum.TICKET_TYPE, selectedTicket.type);
@@ -53,6 +60,18 @@
 
         while (formattedCommitMessage.includes(global.TicketEnum.TICKET_ASSIGNEE)) {
             formattedCommitMessage = formattedCommitMessage.replace(global.TicketEnum.TICKET_ASSIGNEE, selectedTicket.assignee);
+        }
+
+        while (formattedCommitMessage.includes(global.TicketEnum.TICKET_PRIORITY)) {
+            formattedCommitMessage = formattedCommitMessage.replace(global.TicketEnum.TICKET_PRIORITY, selectedTicket.priority);
+        }
+
+        while (formattedCommitMessage.includes(global.TicketEnum.TICKET_STORYPOINTS)) {
+            formattedCommitMessage = formattedCommitMessage.replace(global.TicketEnum.TICKET_STORYPOINTS, selectedTicket.storyPoints);
+        }
+
+        while (formattedCommitMessage.includes(global.TicketEnum.TICKET_DESCRIPTION)) {
+            formattedCommitMessage = formattedCommitMessage.replace(global.TicketEnum.TICKET_DESCRIPTION, selectedTicket.description);
         }
 
         while (formattedCommitMessage.includes(global.TicketEnum.NEWLINE)) {
