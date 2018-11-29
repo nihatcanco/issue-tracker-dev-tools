@@ -81,8 +81,9 @@
                             let ticketNumberElement = document.getElementById('key-val');
                             let ticketTypeElement = document.getElementById('type-val');
                             let ticketSummaryElement = document.getElementById('summary-val');
+                            let assigneeElement = document.getElementById('assignee-val');
 
-                            if (!ghxSelectedPrimary && (!ticketNumberElement || !ticketTypeElement || !ticketSummaryElement)) return;
+                            if (!ghxSelectedPrimary && (!ticketNumberElement || !ticketTypeElement || !ticketSummaryElement || !assigneeElement)) return;
 
                             clearInterval(intervalData);
 
@@ -90,11 +91,13 @@
                                 app.selectedTicket.type = ghxSelectedPrimary.getElementsByClassName('ghx-type')[0].getAttribute('title');
                                 app.selectedTicket.number = ghxSelectedPrimary.getElementsByClassName('ghx-key')[0].getAttribute('title');
                                 app.selectedTicket.summary = ghxSelectedPrimary.getElementsByClassName('ghx-inner')[0].textContent;
+                                app.selectedTicket.assignee = ghxSelectedPrimary.getElementsByClassName('ghx-avatar-img')[0].getAttribute('alt').split(': ')[1];
                             }
                             else {
                                 app.selectedTicket.type = ticketTypeElement.textContent.trim().toLowerCase();
                                 app.selectedTicket.number = ticketNumberElement.textContent.trim();
                                 app.selectedTicket.summary = ticketSummaryElement.textContent.trim();
+                                app.selectedTicket.assignee = assigneeElement.childNodes[1].textContent.trim();
                             }
 
                             // Ordering is backwards

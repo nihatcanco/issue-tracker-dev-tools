@@ -12,6 +12,7 @@
         TICKET_TYPE: '{TICKET_TYPE}',
         TICKET_NUMBER: '{TICKET_NUMBER}',
         TICKET_SUMMARY: '{TICKET_SUMMARY}',
+        TICKET_ASSIGNEE: '{TICKET_ASSIGNEE}',
         NEWLINE: '{NEWLINE}',
         UPPERCASE_START: '{UPPERCASE}',
         UPPERCASE_END: '{/UPPERCASE}',
@@ -31,6 +32,7 @@
                 type: 'type',
                 number: 'ABCDEFG-123',
                 summary: 'This is the ticket summary',
+                assignee: 'John Doe',
                 description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque semper magna sed ullamcorper malesuada. Aenean lacinia tincidunt est, vel vestibulum turpis venenatis vel.'
             }
         }
@@ -47,6 +49,10 @@
 
         while (formattedCommitMessage.includes(global.TicketEnum.TICKET_SUMMARY)) {
             formattedCommitMessage = formattedCommitMessage.replace(global.TicketEnum.TICKET_SUMMARY, selectedTicket.summary);
+        }
+
+        while (formattedCommitMessage.includes(global.TicketEnum.TICKET_ASSIGNEE)) {
+            formattedCommitMessage = formattedCommitMessage.replace(global.TicketEnum.TICKET_ASSIGNEE, selectedTicket.assignee);
         }
 
         while (formattedCommitMessage.includes(global.TicketEnum.NEWLINE)) {
