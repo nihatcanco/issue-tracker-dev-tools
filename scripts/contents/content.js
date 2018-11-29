@@ -38,13 +38,27 @@
 
             const intervalDomChanges = setInterval(function () {
 
-                if (document.getElementById('viewissuesidebar') && ((!document.getElementById(app.options.commitMessageBox.divModuleId) && app.options.commitMessageBox.visible) || (!document.getElementById(app.options.branchNameBox.divModuleId) && app.options.branchNameBox.visible)) && !isInitInProgress) {
+                if (
+                    (document.getElementById('viewissuesidebar') || document.getElementById('ghx-detail-view')) &&
+                    (
+                        (!document.getElementById(app.options.commitMessageBox.divModuleId) && app.options.commitMessageBox.visible) ||
+                        (!document.getElementById(app.options.branchNameBox.divModuleId) && app.options.branchNameBox.visible)
+                    ) &&
+                    !isInitInProgress
+                ) {
 
                     isInitInProgress = true;
 
-                    app.viewIssueSidebar = document.getElementById('viewissuesidebar');
+                    app.viewIssueSidebar = document.getElementById('viewissuesidebar') || document.getElementById('ghx-detail-view').childNodes[0].childNodes[1].childNodes[0].childNodes[0].childNodes[0];
 
-                    chrome.storage.sync.get(['commitMessageBoxVisible', 'branchNameBoxVisible', 'isCommitMessageDivCollapsed', 'isBranchNameDivCollapsed', 'commitMessageFormat', 'branchNameFormat'], function (result) {
+                    chrome.storage.sync.get([
+                        'commitMessageBoxVisible',
+                        'isCommitMessageDivCollapsed',
+                        'commitMessageFormat',
+                        'branchNameBoxVisible',
+                        'isBranchNameDivCollapsed',
+                        'branchNameFormat'
+                    ], function (result) {
 
                         // Set options
                         app.options.commitMessageBox.visible = result.commitMessageBoxVisible;
@@ -57,17 +71,31 @@
                         // Wait for the UI elements load
                         const intervalData = setInterval(function () {
 
+                            let ghxSelectedPrimaryList = document.getElementsByClassName('ghx-selected-primary');
+                            let ghxSelectedPrimary = null;
+
+                            if (ghxSelectedPrimaryList) {
+                                ghxSelectedPrimary = ghxSelectedPrimaryList[0];
+                            }
+
                             let ticketNumberElement = document.getElementById('key-val');
                             let ticketTypeElement = document.getElementById('type-val');
                             let ticketSummaryElement = document.getElementById('summary-val');
 
-                            if (!ticketNumberElement || !ticketTypeElement || !ticketSummaryElement) return;
+                            if (!ghxSelectedPrimary && (!ticketNumberElement || !ticketTypeElement || !ticketSummaryElement)) return;
 
                             clearInterval(intervalData);
 
-                            app.selectedTicket.type = ticketTypeElement.textContent.trim().toLowerCase();
-                            app.selectedTicket.number = ticketNumberElement.textContent.trim();
-                            app.selectedTicket.summary = ticketSummaryElement.textContent.trim();
+                            if (ghxSelectedPrimary) {
+                                app.selectedTicket.type = ghxSelectedPrimary.getElementsByClassName('ghx-type')[0].getAttribute('title');
+                                app.selectedTicket.number = ghxSelectedPrimary.getElementsByClassName('ghx-key')[0].getAttribute('title');
+                                app.selectedTicket.summary = ghxSelectedPrimary.getElementsByClassName('ghx-inner')[0].textContent;
+                            }
+                            else {
+                                app.selectedTicket.type = ticketTypeElement.textContent.trim().toLowerCase();
+                                app.selectedTicket.number = ticketNumberElement.textContent.trim();
+                                app.selectedTicket.summary = ticketSummaryElement.textContent.trim();
+                            }
 
                             // Ordering is backwards
                             if (app.options.branchNameBox.visible) {
