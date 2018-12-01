@@ -16,6 +16,7 @@
     const spanFooterText = document.getElementById('cm-footer-text');
     const checkboxShowCommitMessageBox = document.getElementById('cm-checkbox-show-commit-message-box');
     const checkboxShowBranchNameBox = document.getElementById('cm-checkbox-show-branch-name-box');
+    const checkboxTrimOnCopy = document.getElementById('cm-checkbox-trim-on-copy');
     const alertCommitMessageBoxVisibility = document.getElementById('cm-alert-commit-message-box-visibility');
     const alertBranchNameBoxVisibility = document.getElementById('cm-alert-branch-name-box-visibility');
 
@@ -42,6 +43,7 @@
 
             checkboxShowCommitMessageBox.checked = result.commitMessageBoxVisible;
             checkboxShowBranchNameBox.checked = result.branchNameBoxVisible;
+            checkboxTrimOnCopy.checked = result.trimCopiedText;
 
             alertCommitMessageBoxVisibility.hidden = checkboxShowCommitMessageBox.checked;
             alertBranchNameBoxVisibility.hidden = checkboxShowBranchNameBox.checked;
@@ -71,7 +73,7 @@
 
         let ulHtml = '';
 
-        for (var key in global.TicketEnum) {
+        for (let key in global.TicketEnum) {
             if (global.TicketEnum.hasOwnProperty(key)) {
                 ulHtml += '<li>' + global.TicketEnum[key] + '</li>';
             }
@@ -125,7 +127,8 @@
                 commitMessageFormat: commitMessageFormat,
                 commitMessageBoxVisible: checkboxShowCommitMessageBox.checked,
                 branchNameFormat: branchNameFormat,
-                branchNameBoxVisible: checkboxShowBranchNameBox.checked
+                branchNameBoxVisible: checkboxShowBranchNameBox.checked,
+                trimCopiedText: checkboxTrimOnCopy.checked
             }, function () {
                 alert('Options saved! Please reload your page to see the changes.');
             });
