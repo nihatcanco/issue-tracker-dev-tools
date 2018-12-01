@@ -3,28 +3,30 @@
     const document = global.document;
     const setTimeout = global.setTimeout;
     const clearTimeout = global.clearTimeout;
+    const alert = global.alert;
+    const console = global.console;
 
-    var ulTicketTags = document.getElementById('cm-ul-ticket-tags');
-    var inputCommitMessageFormat = document.getElementById('cm-input-commit-message-format');
-    var inputBranchNameFormat = document.getElementById('cm-input-branch-name-format');
-    var spanCommitMessageFormatPreview = document.getElementById('cm-input-commit-message-format-preview');
-    var spanBranchNameFormatPreview = document.getElementById('cm-input-branch-name-format-preview');
-    var buttonSaveOptions = document.getElementById('cm-btn-save-commit-message-format');
-    var spanTitleText = document.getElementById('cm-span-title-text');
-    var spanFooterText = document.getElementById('cm-footer-text');
-    var checkboxShowCommitMessageBox = document.getElementById('cm-checkbox-show-commit-message-box');
-    var checkboxShowBranchNameBox = document.getElementById('cm-checkbox-show-branch-name-box');
-    var alertCommitMessageBoxVisibility = document.getElementById('cm-alert-commit-message-box-visibility');
-    var alertBranchNameBoxVisibility = document.getElementById('cm-alert-branch-name-box-visibility');
+    const ulTicketTags = document.getElementById('cm-ul-ticket-tags');
+    const inputCommitMessageFormat = document.getElementById('cm-input-commit-message-format');
+    const inputBranchNameFormat = document.getElementById('cm-input-branch-name-format');
+    const spanCommitMessageFormatPreview = document.getElementById('cm-input-commit-message-format-preview');
+    const spanBranchNameFormatPreview = document.getElementById('cm-input-branch-name-format-preview');
+    const buttonSaveOptions = document.getElementById('cm-btn-save-commit-message-format');
+    const spanTitleText = document.getElementById('cm-span-title-text');
+    const spanFooterText = document.getElementById('cm-footer-text');
+    const checkboxShowCommitMessageBox = document.getElementById('cm-checkbox-show-commit-message-box');
+    const checkboxShowBranchNameBox = document.getElementById('cm-checkbox-show-branch-name-box');
+    const alertCommitMessageBoxVisibility = document.getElementById('cm-alert-commit-message-box-visibility');
+    const alertBranchNameBoxVisibility = document.getElementById('cm-alert-branch-name-box-visibility');
 
-    var timerInputCommitMessageFormatKeyUp;
-    var timerInputBranchNameFormatKeyUp;
-    var commitMessageFormat = '';
-    var branchNameFormat = '';
+    let timerInputCommitMessageFormatKeyUp;
+    let timerInputBranchNameFormatKeyUp;
+    let commitMessageFormat = '';
+    let branchNameFormat = '';
 
     function init() {
 
-        chrome.storage.sync.get(['commitMessageBoxVisible', 'branchNameBoxVisible', 'isCommitMessageDivCollapsed', 'isBranchNameDivCollapsed', 'commitMessageFormat', 'branchNameFormat'], function (result) {
+        global.GetAllOptions(function (result) {
 
             if (result) {
                 commitMessageFormat = result.commitMessageFormat;
@@ -119,7 +121,12 @@
 
         buttonSaveOptions.addEventListener('click', function () {
 
-            chrome.storage.sync.set({ commitMessageFormat: commitMessageFormat, branchNameFormat: branchNameFormat, commitMessageBoxVisible: checkboxShowCommitMessageBox.checked, branchNameBoxVisible: checkboxShowBranchNameBox.checked }, function () {
+            global.SetOptions({
+                commitMessageFormat: commitMessageFormat,
+                commitMessageBoxVisible: checkboxShowCommitMessageBox.checked,
+                branchNameFormat: branchNameFormat,
+                branchNameBoxVisible: checkboxShowBranchNameBox.checked
+            }, function () {
                 alert('Options saved! Please reload your page to see the changes.');
             });
 
