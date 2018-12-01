@@ -1,31 +1,42 @@
 (function (global) {
 
-    var commitMessageFormatDefault = '{LOWERCASE}{TICKET_TYPE}{/LOWERCASE}({UPPERCASE}{TICKET_NUMBER}{/UPPERCASE}): {TICKET_SUMMARY}{NEWLINE}{NEWLINE}';
-    var branchNameFormatDefault = '{LOWERCASE}{TICKET_TYPE}{/LOWERCASE}/{UPPERCASE}{TICKET_NUMBER}{/UPPERCASE}-';
+    const console = global.console;
 
+    const commitMessageFormatDefault = '{LOWERCASE}{TICKET_TYPE}{/LOWERCASE}({UPPERCASE}{TICKET_NUMBER}{/UPPERCASE}): {TICKET_SUMMARY}{NEWLINE}{NEWLINE}';
+    const branchNameFormatDefault = '{LOWERCASE}{TICKET_TYPE}{/LOWERCASE}/{UPPERCASE}{TICKET_NUMBER}{/UPPERCASE}-';
+
+    /**
+     * Called when the extension installed.
+     */
     chrome.runtime.onInstalled.addListener(function (details) {
 
         console.log(JSON.stringify(details));
 
         // Set the defaults for initial launch
-        chrome.storage.sync.get(['commitMessageBoxVisible', 'branchNameBoxVisible', 'isCommitMessageDivCollapsed', 'isBranchNameDivCollapsed', 'commitMessageFormat', 'branchNameFormat'], function (result) {
+        global.GetAllOptions(function (result) {
 
             if (!result) return;
 
-            // Commit Message Box options
-            if (!result.commitMessageBoxVisible) chrome.storage.sync.set({ commitMessageBoxVisible: true }, function () { });
-            if (!result.isCommitMessageDivCollapsed) chrome.storage.sync.set({ isCommitMessageDivCollapsed: false }, function () { });
-            if (!result.commitMessageFormat) chrome.storage.sync.set({ commitMessageFormat: commitMessageFormatDefault }, function () { });
+            // Save the default options
+            global.SetOptions({
 
-            // Branch Name Box options
-            if (!result.branchNameBoxVisible) chrome.storage.sync.set({ branchNameBoxVisible: true }, function () { });
-            if (!result.isBranchNameDivCollapsed) chrome.storage.sync.set({ isBranchNameDivCollapsed: false }, function () { });
-            if (!result.branchNameFormat) chrome.storage.sync.set({ branchNameFormat: branchNameFormatDefault }, function () { });
+                commitMessageBoxVisible: result.commitMessageBoxVisible != null ? result.commitMessageBoxVisible : true,
+                isCommitMessageDivCollapsed: result.isCommitMessageDivCollapsed != null ? result.isCommitMessageDivCollapsed : false,
+                commitMessageFormat: result.commitMessageFormat != null ? result.commitMessageFormat : commitMessageFormatDefault,
+
+                branchNameBoxVisible: result.branchNameBoxVisible != null ? result.branchNameBoxVisible : true,
+                isBranchNameDivCollapsed: result.isBranchNameDivCollapsed != null ? result.isBranchNameDivCollapsed : false,
+                branchNameFormat: result.branchNameFormat != null ? result.branchNameFormat : branchNameFormatDefault
+
+            });
 
         });
 
     });
 
+    /**
+     * Opens the options page in a new tab or focuses to the opened tab.
+     */
     function openOrFocusOptionsPage() {
 
         var optionsUrl = chrome.extension.getURL('options.html');
@@ -35,7 +46,7 @@
             let found = false;
 
             for (let i = 0; i < extensionTabs.length; i++) {
-                if (optionsUrl == extensionTabs[i].url) {
+                if (optionsUrl === extensionTabs[i].url) {
                     found = true;
                     chrome.tabs.update(extensionTabs[i].id, { "selected": true });
                 }
@@ -49,9 +60,13 @@
 
     }
 
-    // Called when the user clicks on the browser action icon.
+    /**
+     * Called when the user clicks on the browser action icon.
+     */
     chrome.browserAction.onClicked.addListener(function (tab) {
+
         openOrFocusOptionsPage();
+
     });
 
 }(window));

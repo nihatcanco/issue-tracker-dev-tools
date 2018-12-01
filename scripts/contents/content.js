@@ -2,12 +2,13 @@
 
     const setInterval = global.setInterval;
     const clearInterval = global.clearInterval;
+    const console = global.console;
 
-    var app = {
+    const app = (function () {
 
-        viewIssueSidebar: null,
+        let viewIssueSidebar = null;
 
-        selectedTicket: {
+        const selectedTicket = {
             type: '',
             number: '',
             summary: '',
@@ -15,9 +16,9 @@
             priority: '',
             storyPoints: '',
             description: ''
-        },
+        };
 
-        options: {
+        const options = {
 
             commitMessageBox: {
                 divModuleId: 'commitmessagegeneratormodule',
@@ -33,123 +34,21 @@
                 format: ''
             }
 
-        },
+        };
 
-        init: function () {
-
-            let isInitInProgress = false;
-
-            const intervalDomChanges = setInterval(function () {
-
-                if (
-                    (document.getElementById('viewissuesidebar') || document.getElementById('ghx-detail-view')) &&
-                    (
-                        (!document.getElementById(app.options.commitMessageBox.divModuleId) && app.options.commitMessageBox.visible) ||
-                        (!document.getElementById(app.options.branchNameBox.divModuleId) && app.options.branchNameBox.visible)
-                    ) &&
-                    !isInitInProgress
-                ) {
-
-                    isInitInProgress = true;
-
-                    app.viewIssueSidebar = document.getElementById('viewissuesidebar') || document.getElementById('ghx-detail-view').childNodes[0].childNodes[1].childNodes[0].childNodes[0].childNodes[0];
-
-                    chrome.storage.sync.get([
-                        'commitMessageBoxVisible',
-                        'isCommitMessageDivCollapsed',
-                        'commitMessageFormat',
-                        'branchNameBoxVisible',
-                        'isBranchNameDivCollapsed',
-                        'branchNameFormat'
-                    ], function (result) {
-
-                        // Set options
-                        app.options.commitMessageBox.visible = result.commitMessageBoxVisible;
-                        app.options.commitMessageBox.collapsed = result.isCommitMessageDivCollapsed;
-                        app.options.commitMessageBox.format = result.commitMessageFormat;
-                        app.options.branchNameBox.visible = result.branchNameBoxVisible;
-                        app.options.branchNameBox.collapsed = result.isBranchNameDivCollapsed;
-                        app.options.branchNameBox.format = result.branchNameFormat;
-
-                        // Wait for the UI elements load
-                        const intervalData = setInterval(function () {
-
-                            let ghxSelectedPrimaryList = document.getElementsByClassName('ghx-selected-primary');
-                            let ghxSelectedPrimary = null;
-
-                            if (ghxSelectedPrimaryList) {
-                                ghxSelectedPrimary = ghxSelectedPrimaryList[0];
-                            }
-
-                            let ticketTypeElement = document.getElementById('type-val');
-                            let ticketNumberElement = document.getElementById('key-val');
-                            let ticketSummaryElement = document.getElementById('summary-val');
-                            let ticketAssigneeElement = document.getElementById('assignee-val');
-                            let ticketPriorityElement = document.getElementById('priority-val');
-                            let ticketStoryPointsElement = document.getElementById('customfieldmodule');
-                            ticketStoryPointsElement = ticketStoryPointsElement ? ticketStoryPointsElement.querySelector('strong[title="Story Points"]') : null;
-                            ticketStoryPointsElement = ticketStoryPointsElement ? ticketStoryPointsElement.nextElementSibling : null;
-                            let ticketDescriptionElement = document.getElementById('description-val');
-
-                            if (!ghxSelectedPrimary && (!ticketTypeElement || !ticketNumberElement || !ticketSummaryElement || !ticketAssigneeElement || !ticketPriorityElement || !ticketDescriptionElement)) return;
-
-                            clearInterval(intervalData);
-
-                            if (ghxSelectedPrimary) {
-                                app.selectedTicket.type = ghxSelectedPrimary.getElementsByClassName('ghx-type')[0].getAttribute('title');
-                                app.selectedTicket.number = ghxSelectedPrimary.getElementsByClassName('ghx-key')[0].getAttribute('title');
-                                app.selectedTicket.summary = ghxSelectedPrimary.getElementsByClassName('ghx-inner')[0].textContent;
-                                app.selectedTicket.assignee = ghxSelectedPrimary.getElementsByClassName('ghx-avatar-img')[0].getAttribute('alt').split(': ')[1];
-                                app.selectedTicket.priority = ghxSelectedPrimary.getElementsByClassName('ghx-priority')[0].getAttribute('title');
-                                app.selectedTicket.storyPoints = ghxSelectedPrimary.querySelector('span[title="Story Points"]').textContent.trim();
-                                app.selectedTicket.description = '';
-                            }
-                            else {
-                                app.selectedTicket.type = ticketTypeElement.textContent.trim();
-                                app.selectedTicket.number = ticketNumberElement.textContent.trim();
-                                app.selectedTicket.summary = ticketSummaryElement.textContent.trim();
-                                app.selectedTicket.assignee = ticketAssigneeElement.childNodes[1].textContent.trim();
-                                app.selectedTicket.priority = ticketPriorityElement.textContent.trim();
-                                app.selectedTicket.storyPoints = ticketStoryPointsElement ? ticketStoryPointsElement.textContent.trim() : '';
-                                app.selectedTicket.description = ticketDescriptionElement.textContent.trim();
-                            }
-
-                            // Ordering is backwards
-                            if (app.options.branchNameBox.visible) {
-                                app.branchNameBox().init();
-                            }
-
-                            if (app.options.commitMessageBox.visible) {
-                                app.commitMessageBox().init();
-                            }
-
-                            isInitInProgress = false;
-
-                        }, 500);
-
-                    });
-
-                }
-
-            }, 1000);
-
-        },
-
-        commitMessageBox: function () {
-
-            const public = {};
+        const commitMessageBox = (function () {
 
             let commitMessage = '';
 
             // UI elements
-            public.divModule = null;
+            let divModule = null;
             let titleHeader;
             let textAreaCommitMessage;
             let buttonCopyToClipboard;
             let buttonReset;
             let spanCharacterCount;
 
-            public.init = function () {
+            const init = function () {
 
                 createUi();
                 updateCharacterCount();
@@ -160,9 +59,9 @@
 
             function createUi() {
 
-                public.divModule = document.createElement('div');
-                public.divModule.id = app.options.commitMessageBox.divModuleId;
-                public.divModule.className = 'module toggle-wrap' + (app.options.commitMessageBox.collapsed ? ' collapsed' : '');
+                divModule = document.createElement('div');
+                divModule.id = options.commitMessageBox.divModuleId;
+                divModule.className = 'module toggle-wrap' + (options.commitMessageBox.collapsed ? ' collapsed' : '');
 
                 let divHeader = document.createElement('div');
                 divHeader.id = 'commitmessagegenerator_heading';
@@ -215,10 +114,10 @@
                 ulItemDetails.appendChild(li0);
                 ulItemDetails.appendChild(li1);
                 divContent.appendChild(ulItemDetails);
-                public.divModule.appendChild(divHeader);
-                public.divModule.appendChild(divContent);
+                divModule.appendChild(divHeader);
+                divModule.appendChild(divContent);
 
-                app.viewIssueSidebar.insertBefore(public.divModule, app.viewIssueSidebar.firstChild);
+                viewIssueSidebar.insertBefore(divModule, viewIssueSidebar.firstChild);
 
             }
 
@@ -226,8 +125,8 @@
 
                 titleHeader.addEventListener('click', function () {
                     // Set collapsed status
-                    let isCollapsed = !public.divModule.className.includes('collapsed');
-                    chrome.storage.sync.set({ isCommitMessageDivCollapsed: isCollapsed }, function () { });
+                    const isCollapsed = !divModule.className.includes('collapsed');
+                    global.SetOptions({ isCommitMessageDivCollapsed: isCollapsed });
                 });
 
                 textAreaCommitMessage.addEventListener('keyup', function () {
@@ -247,7 +146,7 @@
 
             function setData() {
 
-                commitMessage = global.GetFormattedCommitMessage(app.options.commitMessageBox.format, app.selectedTicket);
+                commitMessage = global.GetFormattedCommitMessage(options.commitMessageBox.format, selectedTicket);
                 textAreaCommitMessage.value = commitMessage;
                 updateCharacterCount();
 
@@ -259,24 +158,27 @@
 
             }
 
-            return public;
-        },
+            return {
 
-        branchNameBox: function () {
+                init: init
 
-            const public = {};
+            };
+
+        })();
+
+        const branchNameBox = (function () {
 
             let branchName = '';
 
             // UI elements
-            public.divModule = null;
+            let divModule = null;
             let titleHeader;
             let inputBranchName;
             let buttonCopyToClipboard;
             let buttonReset;
             let spanCharacterCount;
 
-            public.init = function () {
+            const init = function () {
 
                 createUi();
                 updateCharacterCount();
@@ -287,11 +189,11 @@
 
             function createUi() {
 
-                public.divModule = document.createElement('div');
-                public.divModule.id = app.options.branchNameBox.divModuleId;
-                public.divModule.className = 'module toggle-wrap' + (app.options.branchNameBox.collapsed ? ' collapsed' : '');
-                public.divModule.style.padding = '0';
-                public.divModule.style.margin = '0';
+                divModule = document.createElement('div');
+                divModule.id = options.branchNameBox.divModuleId;
+                divModule.className = 'module toggle-wrap' + (options.branchNameBox.collapsed ? ' collapsed' : '');
+                divModule.style.padding = '0';
+                divModule.style.margin = '0';
 
                 let divHeader = document.createElement('div');
                 divHeader.id = 'branchnamegenerator_heading';
@@ -343,10 +245,10 @@
                 ulItemDetails.appendChild(li0);
                 ulItemDetails.appendChild(li1);
                 divContent.appendChild(ulItemDetails);
-                public.divModule.appendChild(divHeader);
-                public.divModule.appendChild(divContent);
+                divModule.appendChild(divHeader);
+                divModule.appendChild(divContent);
 
-                app.viewIssueSidebar.insertBefore(public.divModule, app.viewIssueSidebar.firstChild);
+                viewIssueSidebar.insertBefore(divModule, viewIssueSidebar.firstChild);
 
             }
 
@@ -354,8 +256,8 @@
 
                 titleHeader.addEventListener('click', function () {
                     // Set collapsed status
-                    let isCollapsed = !public.divModule.className.includes('collapsed');
-                    chrome.storage.sync.set({ isBranchNameDivCollapsed: isCollapsed }, function () { });
+                    const isCollapsed = !divModule.className.includes('collapsed');
+                    global.SetOptions({ isBranchNameDivCollapsed: isCollapsed });
                 });
 
                 inputBranchName.addEventListener('keyup', function () {
@@ -375,7 +277,7 @@
 
             function setData() {
 
-                branchName = global.GetFormattedCommitMessage(app.options.branchNameBox.format, app.selectedTicket);
+                branchName = global.GetFormattedCommitMessage(options.branchNameBox.format, selectedTicket);
                 inputBranchName.value = branchName;
                 updateCharacterCount();
 
@@ -387,10 +289,114 @@
 
             }
 
-            return public;
-        }
+            return {
 
-    };
+                init: init
+
+            };
+
+        })();
+
+        const init = function () {
+
+            let isInitInProgress = false;
+
+            setInterval(function () {
+
+                if (
+                    (document.getElementById('viewissuesidebar') || document.getElementById('ghx-detail-view')) &&
+                    (
+                        (!document.getElementById(options.commitMessageBox.divModuleId) && options.commitMessageBox.visible) ||
+                        (!document.getElementById(options.branchNameBox.divModuleId) && options.branchNameBox.visible)
+                    ) &&
+                    !isInitInProgress
+                ) {
+
+                    isInitInProgress = true;
+
+                    viewIssueSidebar = document.getElementById('viewissuesidebar') || document.getElementById('ghx-detail-view').childNodes[0].childNodes[1].childNodes[0].childNodes[0].childNodes[0];
+
+                    global.GetAllOptions(function (result) {
+
+                        // Set options
+                        options.commitMessageBox.visible = result.commitMessageBoxVisible;
+                        options.commitMessageBox.collapsed = result.isCommitMessageDivCollapsed;
+                        options.commitMessageBox.format = result.commitMessageFormat;
+                        options.branchNameBox.visible = result.branchNameBoxVisible;
+                        options.branchNameBox.collapsed = result.isBranchNameDivCollapsed;
+                        options.branchNameBox.format = result.branchNameFormat;
+
+                        // Wait for the UI elements load
+                        const intervalData = setInterval(function () {
+
+                            let ghxSelectedPrimaryList = document.getElementsByClassName('ghx-selected-primary');
+                            let ghxSelectedPrimary = null;
+
+                            if (ghxSelectedPrimaryList) {
+                                ghxSelectedPrimary = ghxSelectedPrimaryList[0];
+                            }
+
+                            let ticketTypeElement = document.getElementById('type-val');
+                            let ticketNumberElement = document.getElementById('key-val');
+                            let ticketSummaryElement = document.getElementById('summary-val');
+                            let ticketAssigneeElement = document.getElementById('assignee-val');
+                            let ticketPriorityElement = document.getElementById('priority-val');
+                            let ticketStoryPointsElement = document.getElementById('customfieldmodule');
+                            ticketStoryPointsElement = ticketStoryPointsElement ? ticketStoryPointsElement.querySelector('strong[title="Story Points"]') : null;
+                            ticketStoryPointsElement = ticketStoryPointsElement ? ticketStoryPointsElement.nextElementSibling : null;
+                            let ticketDescriptionElement = document.getElementById('description-val');
+
+                            if (!ghxSelectedPrimary && (!ticketTypeElement || !ticketNumberElement || !ticketSummaryElement || !ticketAssigneeElement || !ticketPriorityElement || !ticketDescriptionElement)) return;
+
+                            clearInterval(intervalData);
+
+                            if (ghxSelectedPrimary) {
+                                selectedTicket.type = ghxSelectedPrimary.getElementsByClassName('ghx-type')[0].getAttribute('title');
+                                selectedTicket.number = ghxSelectedPrimary.getElementsByClassName('ghx-key')[0].getAttribute('title');
+                                selectedTicket.summary = ghxSelectedPrimary.getElementsByClassName('ghx-inner')[0].textContent;
+                                selectedTicket.assignee = ghxSelectedPrimary.getElementsByClassName('ghx-avatar-img')[0].getAttribute('alt').split(': ')[1];
+                                selectedTicket.priority = ghxSelectedPrimary.getElementsByClassName('ghx-priority')[0].getAttribute('title');
+                                selectedTicket.storyPoints = ghxSelectedPrimary.querySelector('span[title="Story Points"]').textContent.trim();
+                                selectedTicket.description = '';
+                            }
+                            else {
+                                selectedTicket.type = ticketTypeElement.textContent.trim();
+                                selectedTicket.number = ticketNumberElement.textContent.trim();
+                                selectedTicket.summary = ticketSummaryElement.textContent.trim();
+                                selectedTicket.assignee = ticketAssigneeElement.childNodes[1].textContent.trim();
+                                selectedTicket.priority = ticketPriorityElement.textContent.trim();
+                                selectedTicket.storyPoints = ticketStoryPointsElement ? ticketStoryPointsElement.textContent.trim() : '';
+                                selectedTicket.description = ticketDescriptionElement.textContent.trim();
+                            }
+
+                            // Ordering is backwards
+                            if (options.branchNameBox.visible) {
+                                branchNameBox.init();
+                            }
+
+                            if (options.commitMessageBox.visible) {
+                                commitMessageBox.init();
+                            }
+
+                            isInitInProgress = false;
+
+                        }, 500);
+
+                    });
+
+                }
+
+            }, 1000);
+
+        };
+
+        return {
+
+            init: init
+
+        };
+
+    })();
 
     app.init();
 
