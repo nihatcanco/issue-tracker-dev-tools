@@ -9,7 +9,7 @@
      * Called when the extension installed.
      */
     chrome.runtime.onInstalled.addListener(function (details) {
-        
+
         // Set the defaults for initial launch
         global.GetAllOptions(function (result) {
 
@@ -21,10 +21,12 @@
                 commitMessageBoxVisible: result.commitMessageBoxVisible != null ? result.commitMessageBoxVisible : true,
                 isCommitMessageDivCollapsed: result.isCommitMessageDivCollapsed != null ? result.isCommitMessageDivCollapsed : false,
                 commitMessageFormat: result.commitMessageFormat != null ? result.commitMessageFormat : commitMessageFormatDefault,
+                previousCommitMessageFormats: result.previousCommitMessageFormats != null ? result.previousCommitMessageFormats : [commitMessageFormatDefault],
 
                 branchNameBoxVisible: result.branchNameBoxVisible != null ? result.branchNameBoxVisible : true,
                 isBranchNameDivCollapsed: result.isBranchNameDivCollapsed != null ? result.isBranchNameDivCollapsed : false,
-                branchNameFormat: result.branchNameFormat != null ? result.branchNameFormat : branchNameFormatDefault
+                branchNameFormat: result.branchNameFormat != null ? result.branchNameFormat : branchNameFormatDefault,
+                previousBranchNameFormats: result.previousBranchNameFormats != null ? result.previousBranchNameFormats : [branchNameFormatDefault]
 
             });
 

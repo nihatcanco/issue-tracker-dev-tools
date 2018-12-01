@@ -30,9 +30,11 @@
         commitMessageBoxVisible: 'commitMessageBoxVisible',
         isCommitMessageDivCollapsed: 'isCommitMessageDivCollapsed',
         commitMessageFormat: 'commitMessageFormat',
+        previousCommitMessageFormats: 'previousCommitMessageFormats',
         branchNameBoxVisible: 'branchNameBoxVisible',
         isBranchNameDivCollapsed: 'isBranchNameDivCollapsed',
         branchNameFormat: 'branchNameFormat',
+        previousBranchNameFormats: 'previousBranchNameFormats',
         trimCopiedText: 'trimCopiedText'
     };
 
