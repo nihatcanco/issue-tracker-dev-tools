@@ -30,7 +30,7 @@ label {
     font-weight: 700;
 }
 
-textarea, table, input {
+textarea, table, input, select {
     font-size: inherit !important
 }
 
@@ -40,6 +40,17 @@ td {
 
 #cm-span-title-text {
     font-size: 1.2rem;
+}
+
+#cm-ul-ticket-tags {
+    list-style-type: none;
+    padding: 0;
+    margin-bottom: 0;
+}
+
+.cm-btn-delete {
+    float: right;
+    cursor: pointer;
 }
 
 .alert {

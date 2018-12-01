@@ -22,26 +22,26 @@
                 <h5>Features</h5>
                 <div class="card mb-4">
                     <div class="card-body">
-                        
+
                         <table>
                             <tbody>
-                            
-                            <tr>
-                                <td>Show Commit Message Box</td>
-                                <td><input id="cm-checkbox-show-commit-message-box" type="checkbox" value=""></td>
-                            </tr>
-                            <tr>
-                                <td>Show Branch Name Box</td>
-                                <td><input id="cm-checkbox-show-branch-name-box" type="checkbox" value=""></td>
-                            </tr>
-                            <tr>
-                                <td>Trim text on copy</td>
-                                <td><input id="cm-checkbox-trim-on-copy" type="checkbox" value=""></td>
-                            </tr>
+
+                                <tr>
+                                    <td>Show Commit Message Box</td>
+                                    <td><input id="cm-checkbox-show-commit-message-box" type="checkbox" value=""></td>
+                                </tr>
+                                <tr>
+                                    <td>Show Branch Name Box</td>
+                                    <td><input id="cm-checkbox-show-branch-name-box" type="checkbox" value=""></td>
+                                </tr>
+                                <tr>
+                                    <td>Trim text on copy</td>
+                                    <td><input id="cm-checkbox-trim-on-copy" type="checkbox" value=""></td>
+                                </tr>
 
                             </tbody>
                         </table>
-                        
+
 
                     </div>
                 </div>
@@ -53,7 +53,7 @@
                 <h5>Tags</h5>
                 <div class="card mb-4">
                     <div class="card-body">
-                        <ul id="cm-ul-ticket-tags" style="list-style-type: none; padding: 0; margin-bottom: 0;"></ul>
+                        <ul id="cm-ul-ticket-tags"></ul>
                     </div>
                 </div>
 
@@ -67,6 +67,10 @@
                         Reminder: Commit Message Box is hidden!
                     </div>
                     <div class="card-body">
+                        <h6>Previous Formats:</h6>
+                        <select id="cm-select-previous-commit-message-formats" class="form-control"></select>
+                        <a id="cm-a-delete-selected-commit-message-format" class="text-danger cm-btn-delete">Delete Selected</a>
+                        <br>
                         <h6>Format:</h6>
                         <input id="cm-input-commit-message-format" type="text" class="form-control">
                         <br>
@@ -85,6 +89,10 @@
                         Reminder: Branch Name Box is hidden!
                     </div>
                     <div class="card-body">
+                        <h6>Previous Formats:</h6>
+                        <select id="cm-select-previous-branch-name-formats" class="form-control"></select>
+                        <a id="cm-a-delete-selected-branch-name-format" class="text-danger cm-btn-delete">Delete Selected</a>
+                        <br>
                         <h6>Format:</h6>
                         <input id="cm-input-branch-name-format" type="text" class="form-control">
                         <br>
@@ -97,7 +105,7 @@
 
             <div class="col-md-12">
 
-                <button id="cm-btn-save-commit-message-format" class="btn btn-primary btn-block mb-4">Save Changes</button>
+                <button id="cm-btn-save-options" class="btn btn-primary btn-block mb-4">Save Changes</button>
 
             </div>
 
