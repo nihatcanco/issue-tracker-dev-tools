@@ -9,9 +9,7 @@
      * Called when the extension installed.
      */
     chrome.runtime.onInstalled.addListener(function (details) {
-
-        console.log(JSON.stringify(details));
-
+        
         // Set the defaults for initial launch
         global.GetAllOptions(function (result) {
 

@@ -1,7 +1,6 @@
 {
   "background": {
     "scripts": [
-      "scripts/libs/jquery-3.3.1.min.js",
       "scripts/libs/helper.js",
       "scripts/backgrounds/background.js"
     ]
@@ -30,12 +29,10 @@
         "<all_urls>"
       ],
       "js": [
-        "scripts/libs/jquery-3.3.1.min.js",
         "scripts/libs/helper.js",
         "scripts/contents/content.js"
       ],
       "css": [
-        "styles/fontawesome-all.min.css",
         "styles/content.css"
       ]
     }
