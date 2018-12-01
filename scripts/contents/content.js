@@ -105,7 +105,7 @@
                                 app.selectedTicket.description = '';
                             }
                             else {
-                                app.selectedTicket.type = ticketTypeElement.textContent.trim().toLowerCase();
+                                app.selectedTicket.type = ticketTypeElement.textContent.trim();
                                 app.selectedTicket.number = ticketNumberElement.textContent.trim();
                                 app.selectedTicket.summary = ticketSummaryElement.textContent.trim();
                                 app.selectedTicket.assignee = ticketAssigneeElement.childNodes[1].textContent.trim();
