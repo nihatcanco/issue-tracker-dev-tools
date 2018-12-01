@@ -26,14 +26,15 @@
     /**
      * Array of options that the extension uses.
      */
-    global.OptionsArray = [
-        'commitMessageBoxVisible',
-        'isCommitMessageDivCollapsed',
-        'commitMessageFormat',
-        'branchNameBoxVisible',
-        'isBranchNameDivCollapsed',
-        'branchNameFormat'
-    ];
+    global.OptionsArray = {
+        commitMessageBoxVisible: 'commitMessageBoxVisible',
+        isCommitMessageDivCollapsed: 'isCommitMessageDivCollapsed',
+        commitMessageFormat: 'commitMessageFormat',
+        branchNameBoxVisible: 'branchNameBoxVisible',
+        isBranchNameDivCollapsed: 'isBranchNameDivCollapsed',
+        branchNameFormat: 'branchNameFormat',
+        trimCopiedText: 'trimCopiedText'
+    };
 
     /**
      * Formats the given commit message with the given format string.
@@ -94,14 +95,18 @@
      */
     global.CopyToClipboard = function (text) {
 
-        text = text.trim();
+        global.GetOptions([global.OptionsArray.trimCopiedText], function (result) {
 
-        let textareaElement = global.document.createElement('textarea');
-        textareaElement.value = text;
-        global.document.body.appendChild(textareaElement);
-        textareaElement.select();
-        global.document.execCommand('copy');
-        global.document.body.removeChild(textareaElement);
+            if (result && result.trimCopiedText) text = text.trim();
+
+            const textareaElement = global.document.createElement('textarea');
+            textareaElement.value = text;
+            global.document.body.appendChild(textareaElement);
+            textareaElement.select();
+            global.document.execCommand('copy');
+            global.document.body.removeChild(textareaElement);
+
+        });
 
     };
 
@@ -111,7 +116,26 @@
      */
     global.GetAllOptions = function (callbackFunction) {
 
-        chrome.storage.sync.get(global.OptionsArray, callbackFunction);
+        const optionsArray = [];
+
+        for (let key in global.OptionsArray) {
+            if (global.OptionsArray.hasOwnProperty(key)) {
+                optionsArray.push(global.OptionsArray[key]);
+            }
+        }
+
+        chrome.storage.sync.get(optionsArray, callbackFunction);
+
+    };
+
+    /**
+     * Gets the specified options.
+     * @param {any} optionsArray
+     * @param {any} callback
+     */
+    global.GetOptions = function (optionsArray, callbackFunction) {
+
+        chrome.storage.sync.get(optionsArray, callbackFunction);
 
     };
 
