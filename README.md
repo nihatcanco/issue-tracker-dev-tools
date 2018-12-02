@@ -1,6 +1,6 @@
-# Git Helper Tools - Chrome Extension (BETA)
+# Issue Tracker Dev Tools
 
-A Google Chrome extension that contains tools for software developers.
+A Google Chrome extension that contains dev tools for issue tracker systems.
 
 ## How to install?
 ...
