@@ -1,14 +1,16 @@
 {
+  "manifest_version": 2,
+  "name": "Issue Tracker Dev Tools",
+  "version": "1.0.0",
+  "author": "Nihatcan Colpan",
+  "description": "A Google Chrome extension that contains dev tools for issue tracker systems.",
+  "homepage_url": "https://github.com/nihatcanco/issue-tracker-dev-tools",
   "background": {
     "scripts": [
       "scripts/libs/helper.js",
       "scripts/backgrounds/background.js"
     ]
   },
-  "manifest_version": 2,
-  "name": "Git Helper Tools",
-  "version": "0.46.5",
-  "description": "A Google Chrome extension that contains tools for software developers.",
   "browser_action": {
     "default_popup": "",
     "default_title": ""
@@ -39,8 +41,7 @@
   ],
   "permissions": [
     "storage",
-    "tabs",
-    "activeTab"
+    "tabs"
   ],
   "web_accessible_resources": [
     "styles/webfonts/*",
