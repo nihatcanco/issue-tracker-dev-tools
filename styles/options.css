@@ -23,7 +23,8 @@ body {
     font-family: "Roboto";
     font-weight: 400;
     font-size: .8rem;
-    background-color: #f8f9fa;
+    background-color: #333;
+    color: #333;
 }
 
 label {
@@ -38,6 +39,10 @@ td {
     padding: 4px 10px;
 }
 
+.cm-card-header{
+    color: #fff;
+}
+
 #cm-span-title-text {
     font-size: 1.2rem;
 }
@@ -46,6 +51,10 @@ td {
     list-style-type: none;
     padding: 0;
     margin-bottom: 0;
+}
+
+#cm-footer-text{
+    color: #fff;
 }
 
 .cm-btn-delete {
