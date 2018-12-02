@@ -40,8 +40,8 @@
 
             // Set title & footer texts
             document.title = global.Manifest.name;
-            spanTitleText.innerHTML = 'for ' + global.Manifest.name;
-            spanFooterText.innerHTML = global.Manifest.name + '<br>v' + global.Manifest.version;
+            spanTitleText.innerHTML = '<small>for</small> ' + global.Manifest.name;
+            spanFooterText.innerHTML = global.Manifest.name + ' v' + global.Manifest.version + '<br><a href="' + global.Manifest.homepage_url + '" target="_blank" style="color: white;">Github</a>';
 
             // Set checkboxes
             checkboxShowCommitMessageBox.checked = result.commitMessageBoxVisible;
