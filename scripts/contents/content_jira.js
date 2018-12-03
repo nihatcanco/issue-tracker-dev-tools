@@ -1,3 +1,12 @@
+chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
+
+    // To avoid duplicate injections.
+    if (msg.text === 'isContentScriptInjected') {
+        sendResponse(true);
+    }
+
+});
+
 (function (global, document) {
 
     const setInterval = global.setInterval;
@@ -329,13 +338,6 @@
                         // Wait for the UI elements load
                         const intervalData = setInterval(function () {
 
-                            let ghxSelectedPrimaryList = document.getElementsByClassName('ghx-selected-primary');
-                            let ghxSelectedPrimary = null;
-
-                            if (ghxSelectedPrimaryList) {
-                                ghxSelectedPrimary = ghxSelectedPrimaryList[0];
-                            }
-
                             let ticketTypeElement = document.getElementById('type-val');
                             let ticketNumberElement = document.getElementById('key-val');
                             let ticketSummaryElement = document.getElementById('summary-val');
@@ -346,27 +348,61 @@
                             ticketStoryPointsElement = ticketStoryPointsElement ? ticketStoryPointsElement.nextElementSibling : null;
                             let ticketDescriptionElement = document.getElementById('description-val');
 
-                            if (!ghxSelectedPrimary && (!ticketTypeElement || !ticketNumberElement || !ticketSummaryElement || !ticketAssigneeElement || !ticketPriorityElement || !ticketDescriptionElement)) return;
+                            let ghxSelectedPrimaryList = document.getElementsByClassName('ghx-selected-primary');
+                            let ghxSelectedPrimary = null;
+
+                            if (ghxSelectedPrimaryList && ghxSelectedPrimaryList.length > 0) {
+
+                                ghxSelectedPrimary = ghxSelectedPrimaryList[0];
+
+                                let ghxTypes = ghxSelectedPrimary.getElementsByClassName('ghx-type');
+                                let ghxKeys = ghxSelectedPrimary.getElementsByClassName('ghx-key');
+                                let ghxInners = ghxSelectedPrimary.getElementsByClassName('ghx-inner');
+                                let ghxAvatarImgs = ghxSelectedPrimary.getElementsByClassName('ghx-avatar-img');
+                                let ghxPriorities = ghxSelectedPrimary.getElementsByClassName('ghx-priority');
+
+                                if (ghxTypes && ghxTypes.length > 0)
+                                    ticketTypeElement = ghxTypes[0];
+
+                                if (ghxKeys && ghxKeys.length > 0)
+                                    ticketNumberElement = ghxKeys[0];
+
+                                if (ghxInners && ghxInners.length > 0)
+                                    ticketSummaryElement = ghxInners[0];
+
+                                if (ghxAvatarImgs && ghxAvatarImgs.length > 0)
+                                    ticketAssigneeElement = ghxAvatarImgs[0];
+
+                                if (ghxPriorities && ghxPriorities.length > 0)
+                                    ticketPriorityElement = ghxPriorities[0];
+
+                                ticketStoryPointsElement = ghxSelectedPrimary.querySelector('span[title="Story Points"]');
+
+                                // TODO: add description element too (if any)
+
+                            }
+
+                            if (!ticketNumberElement || !ticketSummaryElement || !ticketTypeElement) return;
 
                             clearInterval(intervalData);
 
                             if (ghxSelectedPrimary) {
-                                selectedTicket.type = ghxSelectedPrimary.getElementsByClassName('ghx-type')[0].getAttribute('title');
-                                selectedTicket.number = ghxSelectedPrimary.getElementsByClassName('ghx-key')[0].getAttribute('title');
-                                selectedTicket.summary = ghxSelectedPrimary.getElementsByClassName('ghx-inner')[0].textContent;
-                                selectedTicket.assignee = ghxSelectedPrimary.getElementsByClassName('ghx-avatar-img')[0].getAttribute('alt').split(': ')[1];
-                                selectedTicket.priority = ghxSelectedPrimary.getElementsByClassName('ghx-priority')[0].getAttribute('title');
-                                selectedTicket.storyPoints = ghxSelectedPrimary.querySelector('span[title="Story Points"]').textContent.trim();
+                                selectedTicket.type = ticketTypeElement ? ticketTypeElement.getAttribute('title') : '';
+                                selectedTicket.number = ticketNumberElement ? ticketNumberElement.getAttribute('title') : '';
+                                selectedTicket.summary = ticketSummaryElement ? ticketSummaryElement.textContent : '';
+                                selectedTicket.assignee = (ticketAssigneeElement && ticketAssigneeElement.getAttribute('alt') && ticketAssigneeElement.getAttribute('alt').includes(': ')) ? ticketAssigneeElement.getAttribute('alt').split(': ')[1] : '';
+                                selectedTicket.priority = ticketPriorityElement ? ticketPriorityElement.getAttribute('title') : '';
+                                selectedTicket.storyPoints = ticketStoryPointsElement && ticketStoryPointsElement.textContent ? ticketStoryPointsElement.textContent.trim() : '';
                                 selectedTicket.description = '';
                             }
                             else {
-                                selectedTicket.type = ticketTypeElement.textContent.trim();
-                                selectedTicket.number = ticketNumberElement.textContent.trim();
-                                selectedTicket.summary = ticketSummaryElement.textContent.trim();
-                                selectedTicket.assignee = ticketAssigneeElement.childNodes[1].textContent.trim();
-                                selectedTicket.priority = ticketPriorityElement.textContent.trim();
-                                selectedTicket.storyPoints = ticketStoryPointsElement ? ticketStoryPointsElement.textContent.trim() : '';
-                                selectedTicket.description = ticketDescriptionElement.textContent.trim();
+                                selectedTicket.type = ticketTypeElement && ticketTypeElement.textContent ? ticketTypeElement.textContent.trim() : '';
+                                selectedTicket.number = ticketNumberElement && ticketNumberElement.textContent ? ticketNumberElement.textContent.trim() : '';
+                                selectedTicket.summary = ticketSummaryElement && ticketSummaryElement.textContent ? ticketSummaryElement.textContent.trim() : '';
+                                selectedTicket.assignee = (ticketAssigneeElement && ticketAssigneeElement.childNodes && ticketAssigneeElement.childNodes.length > 1 && ticketAssigneeElement.childNodes[1].textContent) ? ticketAssigneeElement.childNodes[1].textContent.trim() : '';
+                                selectedTicket.priority = ticketPriorityElement && ticketPriorityElement.textContent ? ticketPriorityElement.textContent.trim() : '';
+                                selectedTicket.storyPoints = ticketStoryPointsElement && ticketStoryPointsElement.textContent ? ticketStoryPointsElement.textContent.trim() : '';
+                                selectedTicket.description = ticketDescriptionElement && ticketDescriptionElement.textContent ? ticketDescriptionElement.textContent.trim() : '';
                             }
 
                             // Ordering is backwards

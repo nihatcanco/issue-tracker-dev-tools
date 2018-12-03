@@ -24,24 +24,11 @@
     "48": "images/icon48.png",
     "128": "images/icon128.png"
   },
-  "content_scripts": [
-    {
-      "all_frames": false,
-      "matches": [
-        "<all_urls>"
-      ],
-      "js": [
-        "scripts/libs/helper.js",
-        "scripts/contents/content.js"
-      ],
-      "css": [
-        "styles/content.css"
-      ]
-    }
-  ],
   "permissions": [
     "storage",
-    "tabs"
+    "activeTab",
+    "http://*/",
+    "https://*/"
   ],
   "web_accessible_resources": [
     "styles/webfonts/*",
