@@ -94,7 +94,6 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
                 textAreaCommitMessage.id = 'cm-textarea-commit-message';
                 textAreaCommitMessage.className = 'cm-input';
                 textAreaCommitMessage.setAttribute('rows', '6');
-                textAreaCommitMessage.setAttribute('placeholder', 'Loading...');
 
                 let li1 = document.createElement('li');
                 li1.style.marginTop = '0';
@@ -182,7 +181,7 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
             // UI elements
             let divModule = null;
             let titleHeader;
-            let inputBranchName;
+            let textareaBranchName;
             let buttonCopyToClipboard;
             let buttonReset;
             let spanCharacterCount;
@@ -222,11 +221,10 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
 
                 let li0 = document.createElement('li');
 
-                inputBranchName = document.createElement('input');
-                inputBranchName.id = 'cm-input-branch-name';
-                inputBranchName.className = 'cm-input';
-                inputBranchName.setAttribute('type', 'text');
-                inputBranchName.setAttribute('placeholder', 'Loading...');
+                textareaBranchName = document.createElement('textarea');
+                textareaBranchName.id = 'cm-textarea-branch-name';
+                textareaBranchName.className = 'cm-input';
+                textareaBranchName.setAttribute('rows', '1');
 
                 let li1 = document.createElement('li');
 
@@ -246,7 +244,7 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
                 buttonReset.appendChild(document.createTextNode('Reset'));
 
                 divHeader.appendChild(titleHeader);
-                li0.appendChild(inputBranchName);
+                li0.appendChild(textareaBranchName);
                 spanButtonContainer.appendChild(buttonCopyToClipboard);
                 spanButtonContainer.appendChild(buttonReset);
                 li1.appendChild(spanCharacterCount);
@@ -269,9 +267,16 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
                     global.SetOptions({ isBranchNameDivCollapsed: isCollapsed });
                 });
 
-                inputBranchName.addEventListener('keyup', function () {
-                    branchName = inputBranchName.value;
+                textareaBranchName.addEventListener('keyup', function () {
+                    branchName = textareaBranchName.value;
                     updateCharacterCount();
+                });
+
+                textareaBranchName.addEventListener('keydown', function (e) {
+                    // To disable newline on enter keypress.
+                    if (e.keyCode === 13 && !e.shiftKey) {
+                        e.preventDefault();
+                    }
                 });
 
                 buttonReset.addEventListener('click', function () {
@@ -287,7 +292,7 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
             function setData() {
 
                 branchName = global.GetFormattedCommitMessage(options.branchNameBox.format, selectedTicket);
-                inputBranchName.value = branchName;
+                textareaBranchName.value = branchName;
                 updateCharacterCount();
 
             }
