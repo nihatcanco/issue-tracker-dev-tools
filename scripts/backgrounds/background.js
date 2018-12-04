@@ -10,38 +10,55 @@
      */
     chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
 
-        if (!changeInfo || !changeInfo.status || changeInfo.status !== 'complete' || !tab || !tab.url) return;
+        if (!changeInfo || !changeInfo.status || changeInfo.status !== 'complete') return;
 
         chrome.tabs.sendMessage(tab.id, { text: 'isContentScriptInjected' }, function (isContentScriptInjected) {
 
             // To avoid duplicate injections.
             if (isContentScriptInjected) return;
 
-            const contentScriptJsContainerPath = 'scripts/contents/';
-            const contentScriptCssContainerPath = 'styles/';
-            const helperJsFilePath = 'scripts/libs/helper.js';
-            let contentScriptJsName = '';
-            let contentScriptCssName = '';
 
-            if (tab.url.includes('atlassian') || tab.url.includes('jira')) {
+            chrome.tabs.query({}, function (tabs) {
 
-                contentScriptCssName = 'content_jira.css';
-                contentScriptJsName = 'content_jira.js';
+                let url = '';
 
-            }
+                for (let i = 0; i < tabs.length; i++) {
 
-            if (!contentScriptJsName) return;
+                    if (tabs[i].id === tab.id) {
 
-            chrome.tabs.executeScript(tabId, { file: helperJsFilePath, allFrames: false }, function (result) {
-                console.log('Injected ' + helperJsFilePath + ' to ' + tab.url);
-            });
+                        url = tabs[i].url;
 
-            chrome.tabs.executeScript(tabId, { file: contentScriptJsContainerPath + contentScriptJsName, allFrames: false }, function (result) {
-                console.log('Injected ' + contentScriptJsContainerPath + contentScriptJsName + ' to ' + tab.url);
-            });
+                    }
 
-            chrome.tabs.insertCSS(tabId, { file: contentScriptCssContainerPath + contentScriptCssName }, function (result) {
-                console.log('Injected ' + contentScriptCssContainerPath + contentScriptJsName + ' to ' + tab.url);
+                }
+
+                const contentScriptJsContainerPath = 'scripts/contents/';
+                const contentScriptCssContainerPath = 'styles/';
+                const helperJsFilePath = 'scripts/libs/helper.js';
+                let contentScriptJsName = '';
+                let contentScriptCssName = '';
+
+                if (url.includes('atlassian') || url.includes('jira')) {
+
+                    contentScriptCssName = 'content_jira.css';
+                    contentScriptJsName = 'content_jira.js';
+
+                }
+
+                if (!contentScriptJsName) return;
+
+                chrome.tabs.executeScript(tabId, { file: helperJsFilePath, allFrames: false }, function (result) {
+                    console.log('Injected ' + helperJsFilePath + ' to ' + url);
+                });
+
+                chrome.tabs.executeScript(tabId, { file: contentScriptJsContainerPath + contentScriptJsName, allFrames: false }, function (result) {
+                    console.log('Injected ' + contentScriptJsContainerPath + contentScriptJsName + ' to ' + url);
+                });
+
+                chrome.tabs.insertCSS(tabId, { file: contentScriptCssContainerPath + contentScriptCssName }, function (result) {
+                    console.log('Injected ' + contentScriptCssContainerPath + contentScriptJsName + ' to ' + url);
+                });
+
             });
 
         });
