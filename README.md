@@ -17,5 +17,5 @@ Please note that it only supports JIRA currently.
 ### How Use
 
 
-[overviewlogo]: https://github.com/nihatcanco/issue-tracker-dev-tools/blob/master/images/icon16.png?raw=true
+[overviewlogo]: https://github.com/nihatcanco/issue-tracker-dev-tools/blob/master/images/icon24.png?raw=true
 [chromestorelogo]: https://developer.chrome.com/webstore/images/ChromeWebStore_Badge_v2_206x58.png
