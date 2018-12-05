@@ -5,8 +5,8 @@ The tool blends into the issue/bug tracker UI and automatically generates a comm
 Please note that it only supports JIRA currently.
 
 ### How Install
-1. Install from Chrome Web Store (will be available soon!!)
-    ![alt text][chromestorelogo]
+1. Simply install from Chrome Web Store (will be available soon!!)
+    * ![alt text][chromestorelogo]
 1. Install as an unpackaged extension:
 	- Download or clone the project as ZIP.
 	- Unzip it.
