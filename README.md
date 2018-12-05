@@ -10,7 +10,7 @@ Please note that it only supports JIRA currently.
 1. Install as an unpackaged extension:
 	- Download or clone the project as ZIP.
 	- Unzip it.
-	- Go to **[chrome://extensions](http://chrome://extensions)** in your Google Chrome browser.
+	- Go to **[chrome://extensions](chrome://extensions)** in your Google Chrome browser.
 	- Enable "Developer mode" by clicking the slider on top right corner.
 	- Click "Load unpacked" and browse for the unzipped folder.
 
