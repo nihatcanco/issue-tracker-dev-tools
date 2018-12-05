@@ -25,7 +25,7 @@ To edit the formats, simply open the options page of the extension by clicking t
 ![alt text][ssoptions0]
 <br /><br />
 
-#### Supported Tags:
+### Supported Tags
 
 Tag | Description
 ------------ | -------------
