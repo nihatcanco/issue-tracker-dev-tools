@@ -5,16 +5,17 @@ The tool blends into the issue/bug tracker UI and automatically generates a comm
 Please note that it only supports JIRA currently.
 
 ### How Install
-1) Install from Chrome Web Store (will be available soon!!)
+1. Install from Chrome Web Store (will be available soon!!)
     ![alt text][chromestorelogo]
-2) Install as an unpackaged extension:
--- Download or clone the project as ZIP.
--- Unzip it.
--- Go to [chrome://extensions](chrome://extensions) in your Google Chrome browser.
--- Enable "Developer mode" by clicking the slider on top right corner.
--- Click "Load unpacked" and browse for the unzipped folder.
+1. Install as an unpackaged extension:
+	- Download or clone the project as ZIP.
+	- Unzip it.
+	- Go to [chrome://extensions](chrome://extensions) in your Google Chrome browser.
+	- Enable "Developer mode" by clicking the slider on top right corner.
+	- Click "Load unpacked" and browse for the unzipped folder.
+
+### How Use
+
 
 [overviewlogo]: https://github.com/nihatcanco/issue-tracker-dev-tools/blob/master/images/icon16.png?raw=true
 [chromestorelogo]: https://developer.chrome.com/webstore/images/ChromeWebStore_Badge_v2_206x58.png
-
-### How Use
