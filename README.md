@@ -4,17 +4,17 @@ The tool blends into the issue/bug tracker UI and automatically generates a comm
 
 Please note that it only supports JIRA currently.
 
-### How Install
+### How To Install
 1. Simply install from Chrome Web Store (will be available soon!!)
 	<br />![alt text][chromestorelogo]
 1. Install as an unpackaged extension:
 	- Download or clone the project as ZIP.
 	- Unzip it.
-	- Go to [chrome://extensions](chrome://extensions) in your Google Chrome browser.
+	- Go to **[chrome://extensions](http://chrome://extensions)** in your Google Chrome browser.
 	- Enable "Developer mode" by clicking the slider on top right corner.
 	- Click "Load unpacked" and browse for the unzipped folder.
 
-### How Use
+### How To Use
 You will see 2 boxes by default in the ticket page of your issue/bug tracker. These are "Commit Message" and "Branch Name" boxes. They will be containing according texts (commit message & branch name) that are generated via the predefined formats.
 <br /><br />
 ![alt text][ssjira0]
@@ -41,6 +41,26 @@ Tag | Description
 `{/UPPERCASE}` | Stop uppercasing
 `{LOWERCASE}` | Start lowercasing
 `{/LOWERCASE}` | Stop lowercasing
+
+<br />
+
+### Sample Formats
+##### For commit message:
+```
+Format:
+	{LOWERCASE}{TICKET_TYPE}{/LOWERCASE}({UPPERCASE}{TICKET_NUMBER}{/UPPERCASE}): {TICKET_SUMMARY}{NEWLINE}{NEWLINE}
+Preview:
+	type(ABCDEF-123): This is the ticket summary
+    
+    
+```
+##### For branch name:
+```
+Format:
+	{LOWERCASE}{TICKET_TYPE}{/LOWERCASE}/{UPPERCASE}{TICKET_NUMBER}{/UPPERCASE}-
+Preview:
+	type/ABCDEF-123-
+```
 
 [overviewlogo]: https://github.com/nihatcanco/issue-tracker-dev-tools/blob/master/images/icon24.png?raw=true
 [chromestorelogo]: https://developer.chrome.com/webstore/images/ChromeWebStore_Badge_v2_206x58.png
