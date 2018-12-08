@@ -6,7 +6,7 @@ The tool blends into the issue/bug tracker UI and automatically generates a comm
 
 ### How To Install
 1. Simply install from Chrome Web Store (will be available soon!!)
-	<br />![alt text][chromestorelogo]
+	<br /><a href="https://chrome.google.com/webstore/detail/issue-tracker-dev-tools/lkmlhcgmkdoljddcbbmchekijkfllmfk">![alt text][chromestorelogo]</a>
 1. Install as an unpackaged extension:
 	- Download or clone the project as ZIP.
 	- Unzip it.
