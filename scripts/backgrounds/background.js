@@ -87,7 +87,10 @@
                 branchNameBoxVisible: result.branchNameBoxVisible != null ? result.branchNameBoxVisible : true,
                 isBranchNameDivCollapsed: result.isBranchNameDivCollapsed != null ? result.isBranchNameDivCollapsed : false,
                 branchNameFormat: result.branchNameFormat != null ? result.branchNameFormat : branchNameFormatDefault,
-                previousBranchNameFormats: result.previousBranchNameFormats != null ? result.previousBranchNameFormats : [branchNameFormatDefault]
+                previousBranchNameFormats: result.previousBranchNameFormats != null ? result.previousBranchNameFormats : [branchNameFormatDefault],
+
+				workLogBoxVisible: result.workLogBoxVisible != null ? result.workLogBoxVisible : true,
+				isWorkLogDivCollapsed: result.isWorkLogDivCollapsed != null ? result.isWorkLogDivCollapsed : false
 
             });
 

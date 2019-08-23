@@ -18,6 +18,7 @@
     const buttonSaveOptions = document.getElementById('cm-btn-save-options');
     const spanTitleText = document.getElementById('cm-span-title-text');
     const spanFooterText = document.getElementById('cm-footer-text');
+	const checkboxShowWorkLogBox = document.getElementById('cm-checkbox-show-work-log-box');
     const checkboxShowCommitMessageBox = document.getElementById('cm-checkbox-show-commit-message-box');
     const checkboxShowBranchNameBox = document.getElementById('cm-checkbox-show-branch-name-box');
     const checkboxTrimOnCopy = document.getElementById('cm-checkbox-trim-on-copy');
@@ -44,6 +45,7 @@
             spanFooterText.innerHTML = global.Manifest.name + ' v' + global.Manifest.version + '<br><a href="' + global.Manifest.homepage_url + '" target="_blank" style="color: white;">Github</a>';
 
             // Set checkboxes
+			checkboxShowWorkLogBox.checked = result.workLogBoxVisible;
             checkboxShowCommitMessageBox.checked = result.commitMessageBoxVisible;
             checkboxShowBranchNameBox.checked = result.branchNameBoxVisible;
             checkboxTrimOnCopy.checked = result.trimCopiedText;
@@ -198,6 +200,7 @@
 
                 global.SetOptions({
                     commitMessageFormat: commitMessageFormat,
+					workLogBoxVisible: checkboxShowWorkLogBox.checked,
                     commitMessageBoxVisible: checkboxShowCommitMessageBox.checked,
                     previousCommitMessageFormats: result.previousCommitMessageFormats,
                     branchNameFormat: branchNameFormat,
