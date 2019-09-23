@@ -17,7 +17,7 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
 
 		let viewIssueSidebar = null;
 		let lastWeekWorkLogCountAsSeconds = 0;
-		let mondayOfCurrentWeek = global.GetMondayOfCurrentWeek();
+		let startDate;
 
 		const selectedTicket = {
 			type: '',
@@ -328,6 +328,8 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
 			let titleHeader;
 			let contentTextElement;
 			let issueCount;
+			let buttonShowIssues;
+			let buttonChangeStartDate;
 
 			function createUi() {
 
@@ -350,10 +352,24 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
 				divContent.className = 'mod-content';
 				divContent.style.marginBottom = '20px';
 
+				buttonShowIssues = document.createElement('a');
+				buttonShowIssues.id = 'cm-button-show-issues';
+				buttonShowIssues.className = 'switcher-item cm-a-button';
+				buttonShowIssues.appendChild(document.createTextNode('Show the issues'));
+				buttonShowIssues.style.marginLeft = '0';
+
+				buttonChangeStartDate = document.createElement('a');
+				buttonChangeStartDate.id = 'cm-button-change-start-date';
+				buttonChangeStartDate.className = 'switcher-item cm-a-button';
+				buttonChangeStartDate.appendChild(document.createTextNode('Change the start date'));
+				buttonChangeStartDate.style.marginLeft = '0';
+
 				contentTextElement = document.createElement('p');
-				contentTextElement.innerHTML = 'Loading...';
 
 				divContent.appendChild(contentTextElement);
+				divContent.appendChild(buttonShowIssues);
+				divContent.appendChild(document.createElement('br'));
+				divContent.appendChild(buttonChangeStartDate);
 				divHeader.appendChild(titleHeader);
 				divModule.appendChild(divHeader);
 				divModule.appendChild(divContent);
@@ -370,12 +386,39 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
 					global.SetOptions({ isWorkLogDivCollapsed: isCollapsed });
 				});
 
+				buttonChangeStartDate.addEventListener('click', function () {
+					// Open date dialog
+					let date = prompt('Enter the start date in \'YYYY-MM-DD\' format:');
+					setData(date);
+				});
+
+				buttonShowIssues.addEventListener('click', function () {
+					// Show the calculated issues in Jira
+					//https://jira.broadangle.com/issues/?jql=(assignee%20%3D%20currentUser()%20OR%20reporter%20%3D%20currentUser())%20AND%20worklogDate%20%3E%20startOfWeek()%20
+					let asdqwr = startDate.getFullYear() + '-' + (startDate.getMonth() + 1) + '-' + startDate.getDate();
+					window.open(window.location.origin + '/issues/?jql=(assignee%20=%20currentUser()%20OR%20reporter%20=%20currentUser())%20AND%20worklogDate%20%3E%20' + asdqwr + '%20ORDER%20BY%20issuekey%20ASC', '_blank').focus();
+				});
+
 			}
 
-			function setData() {
+			function setData(dateString = 'startOfWeek()') {
+
+				let date = new Date(dateString);
+
+				if (dateString === 'startOfWeek()') {
+					startDate = global.GetMondayOfCurrentWeek();
+				}
+				else if (global.IsValidDate(date)) {
+					startDate = date;
+				} else {
+					alert('The date is not valid.');
+					return;
+				}
+
+				contentTextElement.innerHTML = 'Loading...';
 
 				// Calculate the worklog for the current week
-				global.GetJSON('https://jira.broadangle.com/rest/api/latest/search?jql=(assignee%20=%20currentUser()%20OR%20reporter%20=%20currentUser())%20AND%20worklogDate%20%3E%20startOfWeek()%20ORDER%20BY%20issuekey%20ASC',
+				global.GetJSON('https://jira.broadangle.com/rest/api/latest/search?jql=(assignee%20=%20currentUser()%20OR%20reporter%20=%20currentUser())%20AND%20worklogDate%20%3E%20' + dateString + '%20ORDER%20BY%20issuekey%20ASC',
 					function (err, data) {
 
 						issueCount = data.issues.length;
@@ -397,7 +440,7 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
 
 							for (let j = 0; j < data1.fields.worklog.worklogs.length; j++) {
 
-								if (mondayOfCurrentWeek <= new Date(data1.fields.worklog.worklogs[j].started)) {
+								if (startDate <= new Date(data1.fields.worklog.worklogs[j].started)) {
 									lastWeekWorkLogCountAsSeconds += data1.fields.worklog.worklogs[j].timeSpentSeconds;
 								}
 
@@ -421,7 +464,7 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
 						'<small><i>' +
 						issueCount + ' issues in total' +
 						'<br>' +
-						'starting from: ' + global.GetFormattedDateString(mondayOfCurrentWeek) +
+						'starting from: ' + global.GetFormattedDateString(startDate) +
 						'</i></small>';
 
 					contentTextElement.innerHTML = contentTextInnerHtmlText;
