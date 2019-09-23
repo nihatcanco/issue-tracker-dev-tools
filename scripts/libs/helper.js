@@ -187,6 +187,10 @@
 		return new Date(d.getFullYear(), d.getMonth(), d.getDate() + (day === 0 ? -6 : 1) - day);
 	};
 
+	global.IsValidDate = function (date) {
+		return date && Object.prototype.toString.call(date) === "[object Date]" && !isNaN(date);
+	};
+
 	global.GetFormattedDateString = function (date, options) {
 
 		options = options || { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
