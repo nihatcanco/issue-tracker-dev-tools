@@ -418,7 +418,7 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
 				contentTextElement.innerHTML = 'Loading...';
 
 				// Calculate the worklog for the current week
-				global.GetJSON('https://jira.broadangle.com/rest/api/latest/search?jql=(assignee%20=%20currentUser()%20OR%20reporter%20=%20currentUser())%20AND%20worklogDate%20%3E%20' + dateString + '%20ORDER%20BY%20issuekey%20ASC',
+				global.GetJSON('https://jira.broadangle.com/rest/api/latest/search?jql=(assignee%20=%20currentUser()%20OR%20reporter%20=%20currentUser())%20AND%20worklogDate%20%3E=%20' + dateString + '%20ORDER%20BY%20issuekey%20ASC',
 					function (err, data) {
 
 						issueCount = data.issues.length;
