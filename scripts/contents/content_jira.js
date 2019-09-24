@@ -394,9 +394,8 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
 
 				buttonShowIssues.addEventListener('click', function () {
 					// Show the calculated issues in Jira
-					//https://jira.broadangle.com/issues/?jql=(assignee%20%3D%20currentUser()%20OR%20reporter%20%3D%20currentUser())%20AND%20worklogDate%20%3E%20startOfWeek()%20
-					let asdqwr = startDate.getFullYear() + '-' + (startDate.getMonth() + 1) + '-' + startDate.getDate();
-					window.open(window.location.origin + '/issues/?jql=(assignee%20=%20currentUser()%20OR%20reporter%20=%20currentUser())%20AND%20worklogDate%20%3E%20' + asdqwr + '%20ORDER%20BY%20issuekey%20ASC', '_blank').focus();
+					let sd = startDate.getFullYear() + '-' + (startDate.getMonth() + 1) + '-' + startDate.getDate();
+					window.open(window.location.origin + '/issues/?jql=(assignee%20=%20currentUser()%20OR%20reporter%20=%20currentUser())%20AND%20worklogDate%20%3E=%20' + sd + '%20ORDER%20BY%20issuekey%20ASC', '_blank').focus();
 				});
 
 			}
@@ -418,7 +417,7 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
 				contentTextElement.innerHTML = 'Loading...';
 
 				// Calculate the worklog for the current week
-				global.GetJSON('https://jira.broadangle.com/rest/api/latest/search?jql=(assignee%20=%20currentUser()%20OR%20reporter%20=%20currentUser())%20AND%20worklogDate%20%3E=%20' + dateString + '%20ORDER%20BY%20issuekey%20ASC',
+				global.GetJSON(window.location.origin + '/rest/api/latest/search?jql=(assignee%20=%20currentUser()%20OR%20reporter%20=%20currentUser())%20AND%20worklogDate%20%3E=%20' + dateString + '%20ORDER%20BY%20issuekey%20ASC',
 					function (err, data) {
 
 						issueCount = data.issues.length;
@@ -435,7 +434,7 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
 
 					let issue = issues[0];
 
-					global.GetJSON('https://jira.broadangle.com/rest/api/latest/issue/' + issue.key,
+					global.GetJSON(window.location.origin + '/rest/api/latest/issue/' + issue.key,
 						function (err1, data1) {
 
 							for (let j = 0; j < data1.fields.worklog.worklogs.length; j++) {
