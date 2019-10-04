@@ -41,7 +41,9 @@
 		workLogBoxVisible: 'workLogBoxVisible',
 		isWorkLogDivCollapsed: 'isWorkLogDivCollapsed',
 
-		trimCopiedText: 'trimCopiedText'
+		trimCopiedText: 'trimCopiedText',
+
+		isDarkMode: 'isDarkMode'
 	};
 
     /**
@@ -60,7 +62,7 @@
 				priority: 'Major',
 				storyPoints: '8',
 				description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque semper magna sed ullamcorper malesuada. Aenean lacinia tincidunt est, vel vestibulum turpis venenatis vel.'
-			}
+			};
 		}
 
 		let formattedCommitMessage = commitMessageFormat;
