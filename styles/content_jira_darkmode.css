@@ -1,0 +1,103 @@
+
+
+/* 
+	dark gray: #2B2B2B
+	light gray: #3C3F41
+	lighter gray: #3F3F46
+	border color: #333333;
+	text color: #C8C8C8;
+*/
+
+
+/* SCROLL BARS */
+::-webkit-scrollbar {
+	width: 14px;
+	height: 14px;
+}
+
+::-webkit-scrollbar-track {
+	background: #3C3F41 !important;
+}
+
+::-webkit-scrollbar-thumb {
+	background: #2B2B2B !important;
+}
+
+/* TEXTS */
+body, h1, h2, a, button, .aui-button, .issue-list li a, .aui-nav a, textarea, .aui-badge, .item-details a, .issue-data-block a, .filter-actions, .stsequence {
+	color: #C8C8C8 !important;
+	text-shadow: none !important;
+}
+
+.action-details a {
+	color: white;
+}
+
+strong {
+	color: #C8C8C8 !important;
+}
+
+/* BACKGROUNDS */
+.issue-data-block .aui-icon {
+	background: none !important;
+}
+
+.toggle-title, .command-bar, .issue-header, .detail-panel, #issue-content, .aui-header, .saved-search-selector, .navigator-search, .navigator-sidebar, .tabs > li > a, .aui-toolbar .toolbar-group .toolbar-trigger, .aui-toolbar .aui-dd-parent a.aui-dd-trigger, .aui-button, .aui-badge, .filter-actions, textarea, .issuerow, table, .aui-sidebar-wrapper {
+	background: #2B2B2B !important;
+}
+
+	.aui-dropdown2.aui-style-default:hover a, .aui-nav-link:hover, .aui-header-logo a:hover, .saved-filter li:hover, .aui-dropdown2-trigger:hover, .aui-header .active, .aui-dropdown2, .aui-dropdown2:hover, .list-results-panel, .aui-icon, .tabs > li.active > strong, .tabs > li, .aui-toolbar .toolbar-group .toolbar-trigger:hover, .aui-toolbar .aui-dd-parent a.aui-dd-trigger:hover, .aui-button:hover, .ops, #create_link:hover, .ajs-layer, .ops li a.drop-menu:hover, .ops li a.drop-menu.active, .issuerow:hover {
+		background: #3C3F41 !important;
+	}
+
+		.aui-dropdown2 li:hover a, li.focused, .issue-data-block:hover, .issue-data-block.focused, textarea:focus, .cm-input:focus, .editable-field:hover, .links-list > dd:hover, .ops:hover, #create_link {
+			background-color: #3F3F46 !important;
+		}
+
+div.loading {
+	background: black !important;
+}
+
+/* BORDERS */
+.mod-header {
+	background: none !important;
+}
+
+.aui-dropdown2-section, .aui-header, .aui-dropdown2, .aui-item, .issue-list > li, .saved-search-selector, .navigator-search, .issue-data-block, .tabs, .filter-panel-wrapper, .filter-panel-section, .issue-drop-zone, textarea, .aui-icon, .tabs > li > a, .tabs > li.active > strong, .aui-toolbar .toolbar-group .toolbar-trigger, .aui-toolbar .aui-dd-parent a.aui-dd-trigger, .aui-button, .ajs-layer, .aui-list-section, .lozenge, .issuerow > td {
+	border-color: #333333 !important;
+}
+
+.navigator-sidebar, .aui-group, .status-panel {
+	border: none !important;
+}
+
+.editable-field:hover, .editable-field.saving {
+	box-shadow: 0 0 0 1px #333333 !important;
+}
+
+.mod-header {
+	border-bottom: 1px #C8C8C8 solid !important;
+}
+
+/* BADGE COLORS */
+.lozenge {
+	background: #333333 !important;
+}
+
+.aui-lozenge {
+	text-shadow: none !important;
+}
+
+/* reopened, backlog */
+.jira-issue-status-lozenge-blue-gray {
+	background-color: #425c77 !important;
+	border-color: #425c77 !important;
+	color: #C8C8C8 !important;
+}
+
+/* in progress */
+.jira-issue-status-lozenge-yellow {
+	background-color: #e5bd48 !important;
+	border-color: #e5bd48 !important;
+	color: #2B2B2B !important;
+}

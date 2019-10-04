@@ -22,6 +22,7 @@
     const checkboxShowCommitMessageBox = document.getElementById('cm-checkbox-show-commit-message-box');
     const checkboxShowBranchNameBox = document.getElementById('cm-checkbox-show-branch-name-box');
     const checkboxTrimOnCopy = document.getElementById('cm-checkbox-trim-on-copy');
+    const checkboxEnableDarkMode = document.getElementById('cm-checkbox-dark-mode');
     const alertCommitMessageBoxVisibility = document.getElementById('cm-alert-commit-message-box-visibility');
     const alertBranchNameBoxVisibility = document.getElementById('cm-alert-branch-name-box-visibility');
 
@@ -49,6 +50,7 @@
             checkboxShowCommitMessageBox.checked = result.commitMessageBoxVisible;
             checkboxShowBranchNameBox.checked = result.branchNameBoxVisible;
             checkboxTrimOnCopy.checked = result.trimCopiedText;
+			checkboxEnableDarkMode.checked = result.isDarkMode;
 
             // Set previous format selects
             let previousCommitMessageFormatInnerHtml = '';
@@ -206,7 +208,8 @@
                     branchNameFormat: branchNameFormat,
                     branchNameBoxVisible: checkboxShowBranchNameBox.checked,
                     previousBranchNameFormats: result.previousBranchNameFormats,
-                    trimCopiedText: checkboxTrimOnCopy.checked
+					trimCopiedText: checkboxTrimOnCopy.checked,
+					isDarkMode: checkboxEnableDarkMode.checked
                 }, function () {
                     alert('Options saved! Please reload your page to see the changes.');
                     window.location.reload();
