@@ -16,9 +16,10 @@
     const spanCommitMessageFormatPreview = document.getElementById('cm-input-commit-message-format-preview');
     const spanBranchNameFormatPreview = document.getElementById('cm-input-branch-name-format-preview');
     const buttonSaveOptions = document.getElementById('cm-btn-save-options');
+    const buttonSaveOptionsTop = document.getElementById('cm-btn-save-options-top');
     const spanTitleText = document.getElementById('cm-span-title-text');
     const spanFooterText = document.getElementById('cm-footer-text');
-	const checkboxShowWorkLogBox = document.getElementById('cm-checkbox-show-work-log-box');
+    const checkboxShowWorkLogBox = document.getElementById('cm-checkbox-show-work-log-box');
     const checkboxShowCommitMessageBox = document.getElementById('cm-checkbox-show-commit-message-box');
     const checkboxShowBranchNameBox = document.getElementById('cm-checkbox-show-branch-name-box');
     const checkboxTrimOnCopy = document.getElementById('cm-checkbox-trim-on-copy');
@@ -46,11 +47,11 @@
             spanFooterText.innerHTML = global.Manifest.name + ' v' + global.Manifest.version + '<br><a href="' + global.Manifest.homepage_url + '" target="_blank" style="color: white;">Github</a>';
 
             // Set checkboxes
-			checkboxShowWorkLogBox.checked = result.workLogBoxVisible;
+            checkboxShowWorkLogBox.checked = result.workLogBoxVisible;
             checkboxShowCommitMessageBox.checked = result.commitMessageBoxVisible;
             checkboxShowBranchNameBox.checked = result.branchNameBoxVisible;
             checkboxTrimOnCopy.checked = result.trimCopiedText;
-			checkboxEnableDarkMode.checked = result.isDarkMode;
+            checkboxEnableDarkMode.checked = result.isDarkMode;
 
             // Set previous format selects
             let previousCommitMessageFormatInnerHtml = '';
@@ -180,36 +181,43 @@
 
         });
 
+        buttonSaveOptionsTop.addEventListener('click', function () {
+            buttonSaveOptions.dispatchEvent(new global.CustomEvent('click'));
+        });
+
         buttonSaveOptions.addEventListener('click', function (eventData) {
 
             global.GetOptions([global.OptionsArray.previousCommitMessageFormats, global.OptionsArray.previousBranchNameFormats], function (result) {
 
-                result.previousCommitMessageFormats = result.previousCommitMessageFormats.filter(x => x !== commitMessageFormat);
-                if (commitMessageFormat && !eventData.detail.deleteCurrentCommitMessage) {
-                    result.previousCommitMessageFormats.unshift(commitMessageFormat);
-                } else {
-                    result.previousCommitMessageFormats = result.previousCommitMessageFormats.filter(x => x !== selectPreviousCommitMessageFormats[selectPreviousCommitMessageFormats.selectedIndex].value);
-                    commitMessageFormat = result.previousCommitMessageFormats[0];
-                }
+                if (eventData.detail != null) {
 
-                result.previousBranchNameFormats = result.previousBranchNameFormats.filter(x => x !== branchNameFormat);
-                if (branchNameFormat && !eventData.detail.deleteCurrentBranchName) {
-                    result.previousBranchNameFormats.unshift(branchNameFormat);
-                } else {
-                    result.previousBranchNameFormats = result.previousBranchNameFormats.filter(x => x !== selectPreviousBranchNameFormats[selectPreviousBranchNameFormats.selectedIndex].value);
-                    branchNameFormat = result.previousBranchNameFormats[0];
+                    result.previousCommitMessageFormats = result.previousCommitMessageFormats.filter(x => x !== commitMessageFormat);
+                    if (commitMessageFormat && !eventData.detail.deleteCurrentCommitMessage) {
+                        result.previousCommitMessageFormats.unshift(commitMessageFormat);
+                    } else {
+                        result.previousCommitMessageFormats = result.previousCommitMessageFormats.filter(x => x !== selectPreviousCommitMessageFormats[selectPreviousCommitMessageFormats.selectedIndex].value);
+                        commitMessageFormat = result.previousCommitMessageFormats[0];
+                    }
+
+                    result.previousBranchNameFormats = result.previousBranchNameFormats.filter(x => x !== branchNameFormat);
+                    if (branchNameFormat && !eventData.detail.deleteCurrentBranchName) {
+                        result.previousBranchNameFormats.unshift(branchNameFormat);
+                    } else {
+                        result.previousBranchNameFormats = result.previousBranchNameFormats.filter(x => x !== selectPreviousBranchNameFormats[selectPreviousBranchNameFormats.selectedIndex].value);
+                        branchNameFormat = result.previousBranchNameFormats[0];
+                    }
                 }
 
                 global.SetOptions({
                     commitMessageFormat: commitMessageFormat,
-					workLogBoxVisible: checkboxShowWorkLogBox.checked,
+                    workLogBoxVisible: checkboxShowWorkLogBox.checked,
                     commitMessageBoxVisible: checkboxShowCommitMessageBox.checked,
                     previousCommitMessageFormats: result.previousCommitMessageFormats,
                     branchNameFormat: branchNameFormat,
                     branchNameBoxVisible: checkboxShowBranchNameBox.checked,
                     previousBranchNameFormats: result.previousBranchNameFormats,
-					trimCopiedText: checkboxTrimOnCopy.checked,
-					isDarkMode: checkboxEnableDarkMode.checked
+                    trimCopiedText: checkboxTrimOnCopy.checked,
+                    isDarkMode: checkboxEnableDarkMode.checked
                 }, function () {
                     alert('Options saved! Please reload your page to see the changes.');
                     window.location.reload();
