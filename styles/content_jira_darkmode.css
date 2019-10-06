@@ -6,8 +6,9 @@
 	border color: #333333
 	text color: #d1d1d1
 	text color dark: #bababa
-    primary color: #503c35
-    primary color dark: #40302a
+
+    primary color: #0d5958
+    primary color dark: #0a4342
 */
 
 .mod-header {
@@ -41,11 +42,11 @@
 }
 
 .aui-header {
-    background: #503c35 !important;
+    background: #0d5958 !important;
 }
 
 #create_link {
-    background: #40302a !important;
+    background: #0a4342 !important;
 }
 
     #create_link:hover {
@@ -53,7 +54,7 @@
     }
 
 .aui-list li.active a, form#issue-filter .check-list-item.active, form.aui .check-list-item.active, .check-list-item.active, .check-list-group-footer.active, .dropdown-ready li.active {
-    background: #503c35 !important;
+    background: #0d5958 !important;
 }
 
 .issue-list > li {
@@ -111,6 +112,10 @@
     background: none !important;
 }
 
+.saved-search-selector .navigator-search {
+    padding-top: 0 !important;
+}
+
 /* SCROLL BARS */
 ::-webkit-scrollbar {
     width: 12px;
@@ -155,7 +160,7 @@ td.status span, span.value-text, .aui-nav-selected span, .aui-sidebar-group .aui
 }
 
 /* BACKGROUNDS */
-.dashboard-item-header, .detail-panel, .saved-search-selector, .navigator-search, .navigator-sidebar, .tabs > li > a, .aui-toolbar .toolbar-group .toolbar-trigger, .aui-toolbar .aui-dd-parent a.aui-dd-trigger, .filter-actions:hover span, .issuerow, .aui-sidebar-wrapper, .aui-inline-dialog-contents, .aui-inline-dialog-contents > div, .jira-adbox, .user-hover-buttons a:hover, .drop-menu, .navigator-search .aui-group, #issuetable .rowHeader, .jira-dialog-content .form-footer, .jira-dialog-heading, .jira-dialog .long-field, .jira-dialog input, .aui-page-panel, #ghx-header, #ghx-rabid, #ghx-content-main .ghx-issue, .ghx-detail-description, .ghx-content-main .ghx-column, .gadget-inline, .dashboard-item-content thead, #footer-comment-button, .dropdown-ready, .aui-message, .aui-page-header-actions .aui-button, .aui-dropdown2 li a, .aui-dropdown2, .dialog-menu-group {
+.dashboard-item-header, .detail-panel, .saved-search-selector, .navigator-search, .navigator-sidebar, .tabs > li > a, .aui-toolbar .toolbar-group .toolbar-trigger, .aui-toolbar .aui-dd-parent a.aui-dd-trigger, .filter-actions:hover span, .issuerow, .aui-sidebar-wrapper, .aui-inline-dialog-contents, .aui-inline-dialog-contents > div, .jira-adbox, .user-hover-buttons a:hover, .drop-menu, .navigator-search .aui-group, #issuetable .rowHeader, .jira-dialog-content .form-footer, .jira-dialog-heading, .jira-dialog .long-field, .jira-dialog input, .aui-page-panel, #ghx-header, #ghx-rabid, #ghx-content-main .ghx-issue, .ghx-detail-description, .ghx-content-main .ghx-column, .gadget-inline, .dashboard-item-content thead, #footer-comment-button, .dropdown-ready, .aui-message, .aui-page-header-actions .aui-button, .aui-dropdown2 li a, .aui-dropdown2, .dialog-menu-group, .aui-dropdown2-trigger:hover {
     background: #2b2b2b !important;
 }
 
@@ -184,7 +189,7 @@ div.loading {
     }
 
 .aui-dropdown2 li:hover a, .dialog-menu .dialog-menu-item:hover, .dialog-menu .dialog-menu-item:focus, .dialog-menu .selected {
-    background: #503c35 !important;
+    background: #0d5958 !important;
 }
 
 /* BORDERS */
@@ -222,7 +227,7 @@ textarea, input, .aui-button, #qf-field-picker-trigger, .ghx-swimlane-header:aft
 }
 
 .issue-data-block:hover, .issue-data-block.focused {
-    border-left-color: #503c35 !important;
+    border-left-color: #0d5958 !important;
 }
 
 #issuetable > tbody > tr > td:first-child {
