@@ -211,7 +211,6 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
 				divModule.id = options.branchNameBox.divModuleId;
 				divModule.className = 'module toggle-wrap' + (options.branchNameBox.collapsed ? ' collapsed' : '');
 				divModule.style.padding = '0';
-				divModule.style.margin = '0';
 
 				let divHeader = document.createElement('div');
 				divHeader.id = 'branchnamegenerator_heading';
