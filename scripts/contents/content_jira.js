@@ -1,628 +1,623 @@
 chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
 
-	// To avoid duplicate injections.
-	if (msg.text === 'isContentScriptInjected') {
-		sendResponse(true);
-	}
+    // To avoid duplicate injections.
+    if (msg.text === 'isContentScriptInjected') {
+        sendResponse(true);
+    }
 
 });
 
 (function (global, document) {
 
-	const setInterval = global.setInterval;
-	const clearInterval = global.clearInterval;
-	const console = global.console;
-
-	const app = (function () {
-
-		let viewIssueSidebar = null;
-		let lastWeekWorkLogCountAsSeconds = 0;
-		let startDate;
-
-		const selectedTicket = {
-			type: '',
-			number: '',
-			summary: '',
-			assignee: '',
-			priority: '',
-			storyPoints: '',
-			description: ''
-		};
-
-		const options = {
-
-			commitMessageBox: {
-				divModuleId: 'commitmessagegeneratormodule',
-				visible: true,
-				collapsed: false,
-				format: ''
-			},
-
-			branchNameBox: {
-				divModuleId: 'branchnamegeneratormodule',
-				visible: true,
-				collapsed: false,
-				format: ''
-			},
-
-			workLogBox: {
-				divModuleId: 'worklogcalculatormodule',
-				visible: true,
-				collapsed: false
-			}
-
-		};
-
-		const commitMessageBox = (function () {
-
-			let commitMessage = '';
-
-			// UI elements
-			let divModule = null;
-			let titleHeader;
-			let textAreaCommitMessage;
-			let buttonCopyToClipboard;
-			let buttonReset;
-			let spanCharacterCount;
-
-			const init = function () {
-
-				createUi();
-				updateCharacterCount();
-				setEventHandlers();
-				setData();
-
-			};
+    const setInterval = global.setInterval;
+    const clearInterval = global.clearInterval;
+    const console = global.console;
 
-			function createUi() {
+    const app = (function () {
+
+        let viewIssueSidebar = null;
+        let lastWeekWorkLogCountAsSeconds = 0;
+        let startDate;
+
+        const selectedTicket = {
+            type: '',
+            number: '',
+            summary: '',
+            assignee: '',
+            priority: '',
+            storyPoints: '',
+            description: ''
+        };
+
+        const options = {
+
+            commitMessageBox: {
+                divModuleId: 'commitmessagegeneratormodule',
+                visible: true,
+                collapsed: false,
+                format: ''
+            },
+
+            branchNameBox: {
+                divModuleId: 'branchnamegeneratormodule',
+                visible: true,
+                collapsed: false,
+                format: ''
+            },
+
+            workLogBox: {
+                divModuleId: 'worklogcalculatormodule',
+                visible: true,
+                collapsed: false
+            }
+
+        };
+
+        const commitMessageBox = (function () {
+
+            let commitMessage = '';
+
+            // UI elements
+            let divModule = null;
+            let titleHeader;
+            let textAreaCommitMessage;
+            let buttonCopyToClipboard;
+            let buttonReset;
+            let spanCharacterCount;
+
+            const init = function () {
+
+                createUi();
+                updateCharacterCount();
+                setEventHandlers();
+                setData();
 
-				divModule = document.createElement('div');
-				divModule.id = options.commitMessageBox.divModuleId;
-				divModule.className = 'module toggle-wrap' + (options.commitMessageBox.collapsed ? ' collapsed' : '');
-				divModule.style.padding = '0';
-				divModule.style.margin = '0';
+            };
 
-				let divHeader = document.createElement('div');
-				divHeader.id = 'commitmessagegenerator_heading';
-				divHeader.className = 'mod-header';
+            function createUi() {
 
-				titleHeader = document.createElement('h2');
-				titleHeader.id = 'cm-title-header-commit-message';
-				titleHeader.className = 'toggle-title';
-				titleHeader.appendChild(document.createTextNode('Commit Message'));
+                divModule = document.createElement('div');
+                divModule.id = options.commitMessageBox.divModuleId;
+                divModule.className = 'module toggle-wrap' + (options.commitMessageBox.collapsed ? ' collapsed' : '');
+                divModule.style.padding = '0';
 
-				let divContent = document.createElement('div');
-				divContent.className = 'mod-content';
-				divContent.style.marginBottom = '20px';
+                let divHeader = document.createElement('div');
+                divHeader.id = 'commitmessagegenerator_heading';
+                divHeader.className = 'mod-header';
 
-				let ulItemDetails = document.createElement('ul');
-				ulItemDetails.className = 'item-details';
+                titleHeader = document.createElement('h2');
+                titleHeader.id = 'cm-title-header-commit-message';
+                titleHeader.className = 'toggle-title';
+                titleHeader.appendChild(document.createTextNode('Commit Message'));
 
-				let li0 = document.createElement('li');
+                let divContent = document.createElement('div');
+                divContent.className = 'mod-content';
 
-				textAreaCommitMessage = document.createElement('textarea');
-				textAreaCommitMessage.id = 'cm-textarea-commit-message';
-				textAreaCommitMessage.className = 'cm-input';
-				textAreaCommitMessage.setAttribute('rows', '6');
+                let ulItemDetails = document.createElement('ul');
+                ulItemDetails.className = 'item-details';
 
-				let li1 = document.createElement('li');
-				li1.style.marginTop = '0';
+                let li0 = document.createElement('li');
 
-				spanCharacterCount = document.createElement('span');
+                textAreaCommitMessage = document.createElement('textarea');
+                textAreaCommitMessage.id = 'cm-textarea-commit-message';
+                textAreaCommitMessage.className = 'cm-input';
+                textAreaCommitMessage.setAttribute('rows', '6');
 
-				let spanButtonContainer = document.createElement('span');
-				spanButtonContainer.style.float = 'right';
+                let li1 = document.createElement('li');
+                li1.style.marginTop = '0';
 
-				buttonCopyToClipboard = document.createElement('a');
-				buttonCopyToClipboard.id = 'cm-button-copy-to-clipboard-commit-message';
-				buttonCopyToClipboard.className = 'switcher-item cm-a-button';
-				buttonCopyToClipboard.appendChild(document.createTextNode('Copy'));
+                spanCharacterCount = document.createElement('span');
 
-				buttonReset = document.createElement('a');
-				buttonReset.id = 'cm-button-reset-commit-message';
-				buttonReset.className = 'switcher-item cm-a-button';
-				buttonReset.appendChild(document.createTextNode('Reset'));
+                let spanButtonContainer = document.createElement('span');
+                spanButtonContainer.style.float = 'right';
 
-				divHeader.appendChild(titleHeader);
-				li0.appendChild(textAreaCommitMessage);
-				spanButtonContainer.appendChild(buttonCopyToClipboard);
-				spanButtonContainer.appendChild(buttonReset);
-				li1.appendChild(spanCharacterCount);
-				li1.appendChild(spanButtonContainer);
-				ulItemDetails.appendChild(li0);
-				ulItemDetails.appendChild(li1);
-				divContent.appendChild(ulItemDetails);
-				divModule.appendChild(divHeader);
-				divModule.appendChild(divContent);
+                buttonCopyToClipboard = document.createElement('a');
+                buttonCopyToClipboard.id = 'cm-button-copy-to-clipboard-commit-message';
+                buttonCopyToClipboard.className = 'switcher-item cm-a-button';
+                buttonCopyToClipboard.appendChild(document.createTextNode('Copy'));
 
-				viewIssueSidebar.insertBefore(divModule, viewIssueSidebar.firstChild);
+                buttonReset = document.createElement('a');
+                buttonReset.id = 'cm-button-reset-commit-message';
+                buttonReset.className = 'switcher-item cm-a-button';
+                buttonReset.appendChild(document.createTextNode('Reset'));
 
-			}
+                divHeader.appendChild(titleHeader);
+                li0.appendChild(textAreaCommitMessage);
+                spanButtonContainer.appendChild(buttonCopyToClipboard);
+                spanButtonContainer.appendChild(buttonReset);
+                li1.appendChild(spanCharacterCount);
+                li1.appendChild(spanButtonContainer);
+                ulItemDetails.appendChild(li0);
+                ulItemDetails.appendChild(li1);
+                divContent.appendChild(ulItemDetails);
+                divModule.appendChild(divHeader);
+                divModule.appendChild(divContent);
 
-			function setEventHandlers() {
+                viewIssueSidebar.insertBefore(divModule, viewIssueSidebar.firstChild);
 
-				titleHeader.addEventListener('click', function () {
-					// Set collapsed status
-					const isCollapsed = !divModule.className.includes('collapsed');
-					global.SetOptions({ isCommitMessageDivCollapsed: isCollapsed });
-				});
+            }
 
-				textAreaCommitMessage.addEventListener('keyup', function () {
-					commitMessage = textAreaCommitMessage.value;
-					updateCharacterCount();
-				});
+            function setEventHandlers() {
 
-				buttonReset.addEventListener('click', function () {
-					setData();
-				});
+                titleHeader.addEventListener('click', function () {
+                    // Set collapsed status
+                    const isCollapsed = !divModule.className.includes('collapsed');
+                    global.SetOptions({ isCommitMessageDivCollapsed: isCollapsed });
+                });
 
-				buttonCopyToClipboard.addEventListener('click', function () {
-					global.CopyToClipboard(commitMessage);
-				});
+                textAreaCommitMessage.addEventListener('keyup', function () {
+                    commitMessage = textAreaCommitMessage.value;
+                    updateCharacterCount();
+                });
 
-			}
+                buttonReset.addEventListener('click', function () {
+                    setData();
+                });
 
-			function setData() {
+                buttonCopyToClipboard.addEventListener('click', function () {
+                    global.CopyToClipboard(commitMessage);
+                });
 
-				commitMessage = global.GetFormattedCommitMessage(options.commitMessageBox.format, selectedTicket);
-				textAreaCommitMessage.value = commitMessage;
-				updateCharacterCount();
+            }
 
-			}
+            function setData() {
 
-			function updateCharacterCount() {
+                commitMessage = global.GetFormattedCommitMessage(options.commitMessageBox.format, selectedTicket);
+                textAreaCommitMessage.value = commitMessage;
+                updateCharacterCount();
 
-				spanCharacterCount.innerHTML = 'Character count: ' + (commitMessage ? commitMessage.length : '0');
+            }
 
-			}
+            function updateCharacterCount() {
 
-			return {
+                spanCharacterCount.innerHTML = 'Character count: ' + (commitMessage ? commitMessage.length : '0');
 
-				init: init
+            }
 
-			};
+            return {
 
-		})();
+                init: init
 
-		const branchNameBox = (function () {
+            };
 
-			let branchName = '';
+        })();
 
-			// UI elements
-			let divModule = null;
-			let titleHeader;
-			let textareaBranchName;
-			let buttonCopyToClipboard;
-			let buttonReset;
-			let spanCharacterCount;
+        const branchNameBox = (function () {
 
-			const init = function () {
+            let branchName = '';
 
-				createUi();
-				updateCharacterCount();
-				setEventHandlers();
-				setData();
+            // UI elements
+            let divModule = null;
+            let titleHeader;
+            let textareaBranchName;
+            let buttonCopyToClipboard;
+            let buttonReset;
+            let spanCharacterCount;
 
-			};
+            const init = function () {
 
-			function createUi() {
+                createUi();
+                updateCharacterCount();
+                setEventHandlers();
+                setData();
 
-				divModule = document.createElement('div');
-				divModule.id = options.branchNameBox.divModuleId;
-				divModule.className = 'module toggle-wrap' + (options.branchNameBox.collapsed ? ' collapsed' : '');
-				divModule.style.padding = '0';
+            };
 
-				let divHeader = document.createElement('div');
-				divHeader.id = 'branchnamegenerator_heading';
-				divHeader.className = 'mod-header';
+            function createUi() {
 
-				titleHeader = document.createElement('h2');
-				titleHeader.id = 'cm-title-header-branch-name';
-				titleHeader.className = 'toggle-title';
-				titleHeader.appendChild(document.createTextNode('Branch Name'));
+                divModule = document.createElement('div');
+                divModule.id = options.branchNameBox.divModuleId;
+                divModule.className = 'module toggle-wrap' + (options.branchNameBox.collapsed ? ' collapsed' : '');
+                divModule.style.padding = '0';
 
-				let divContent = document.createElement('div');
-				divContent.className = 'mod-content';
-				divContent.style.marginBottom = '20px';
+                let divHeader = document.createElement('div');
+                divHeader.id = 'branchnamegenerator_heading';
+                divHeader.className = 'mod-header';
 
-				let ulItemDetails = document.createElement('ul');
-				ulItemDetails.className = 'item-details';
+                titleHeader = document.createElement('h2');
+                titleHeader.id = 'cm-title-header-branch-name';
+                titleHeader.className = 'toggle-title';
+                titleHeader.appendChild(document.createTextNode('Branch Name'));
 
-				let li0 = document.createElement('li');
+                let divContent = document.createElement('div');
+                divContent.className = 'mod-content';
 
-				textareaBranchName = document.createElement('textarea');
-				textareaBranchName.id = 'cm-textarea-branch-name';
-				textareaBranchName.className = 'cm-input';
-				textareaBranchName.setAttribute('rows', '1');
+                let ulItemDetails = document.createElement('ul');
+                ulItemDetails.className = 'item-details';
 
-				let li1 = document.createElement('li');
+                let li0 = document.createElement('li');
 
-				spanCharacterCount = document.createElement('span');
+                textareaBranchName = document.createElement('textarea');
+                textareaBranchName.id = 'cm-textarea-branch-name';
+                textareaBranchName.className = 'cm-input';
+                textareaBranchName.setAttribute('rows', '1');
 
-				let spanButtonContainer = document.createElement('span');
-				spanButtonContainer.style.float = 'right';
+                let li1 = document.createElement('li');
 
-				buttonCopyToClipboard = document.createElement('a');
-				buttonCopyToClipboard.id = 'cm-button-copy-to-clipboard-branch-name';
-				buttonCopyToClipboard.className = 'switcher-item cm-a-button';
-				buttonCopyToClipboard.appendChild(document.createTextNode('Copy'));
+                spanCharacterCount = document.createElement('span');
 
-				buttonReset = document.createElement('a');
-				buttonReset.id = 'cm-button-reset-branch-name';
-				buttonReset.className = 'switcher-item cm-a-button';
-				buttonReset.appendChild(document.createTextNode('Reset'));
+                let spanButtonContainer = document.createElement('span');
+                spanButtonContainer.style.float = 'right';
 
-				divHeader.appendChild(titleHeader);
-				li0.appendChild(textareaBranchName);
-				spanButtonContainer.appendChild(buttonCopyToClipboard);
-				spanButtonContainer.appendChild(buttonReset);
-				li1.appendChild(spanCharacterCount);
-				li1.appendChild(spanButtonContainer);
-				ulItemDetails.appendChild(li0);
-				ulItemDetails.appendChild(li1);
-				divContent.appendChild(ulItemDetails);
-				divModule.appendChild(divHeader);
-				divModule.appendChild(divContent);
+                buttonCopyToClipboard = document.createElement('a');
+                buttonCopyToClipboard.id = 'cm-button-copy-to-clipboard-branch-name';
+                buttonCopyToClipboard.className = 'switcher-item cm-a-button';
+                buttonCopyToClipboard.appendChild(document.createTextNode('Copy'));
 
-				viewIssueSidebar.insertBefore(divModule, viewIssueSidebar.firstChild);
+                buttonReset = document.createElement('a');
+                buttonReset.id = 'cm-button-reset-branch-name';
+                buttonReset.className = 'switcher-item cm-a-button';
+                buttonReset.appendChild(document.createTextNode('Reset'));
 
-			}
+                divHeader.appendChild(titleHeader);
+                li0.appendChild(textareaBranchName);
+                spanButtonContainer.appendChild(buttonCopyToClipboard);
+                spanButtonContainer.appendChild(buttonReset);
+                li1.appendChild(spanCharacterCount);
+                li1.appendChild(spanButtonContainer);
+                ulItemDetails.appendChild(li0);
+                ulItemDetails.appendChild(li1);
+                divContent.appendChild(ulItemDetails);
+                divModule.appendChild(divHeader);
+                divModule.appendChild(divContent);
 
-			function setEventHandlers() {
+                viewIssueSidebar.insertBefore(divModule, viewIssueSidebar.firstChild);
 
-				titleHeader.addEventListener('click', function () {
-					// Set collapsed status
-					const isCollapsed = !divModule.className.includes('collapsed');
-					global.SetOptions({ isBranchNameDivCollapsed: isCollapsed });
-				});
+            }
 
-				textareaBranchName.addEventListener('keyup', function () {
-					branchName = textareaBranchName.value;
-					updateCharacterCount();
-				});
+            function setEventHandlers() {
 
-				textareaBranchName.addEventListener('keydown', function (e) {
-					// To disable newline on enter keypress.
-					if (e.keyCode === 13 && !e.shiftKey) {
-						e.preventDefault();
-					}
-				});
+                titleHeader.addEventListener('click', function () {
+                    // Set collapsed status
+                    const isCollapsed = !divModule.className.includes('collapsed');
+                    global.SetOptions({ isBranchNameDivCollapsed: isCollapsed });
+                });
 
-				buttonReset.addEventListener('click', function () {
-					setData();
-				});
+                textareaBranchName.addEventListener('keyup', function () {
+                    branchName = textareaBranchName.value;
+                    updateCharacterCount();
+                });
 
-				buttonCopyToClipboard.addEventListener('click', function () {
-					global.CopyToClipboard(branchName);
-				});
+                textareaBranchName.addEventListener('keydown', function (e) {
+                    // To disable newline on enter keypress.
+                    if (e.keyCode === 13 && !e.shiftKey) {
+                        e.preventDefault();
+                    }
+                });
 
-			}
+                buttonReset.addEventListener('click', function () {
+                    setData();
+                });
 
-			function setData() {
+                buttonCopyToClipboard.addEventListener('click', function () {
+                    global.CopyToClipboard(branchName);
+                });
 
-				branchName = global.GetFormattedCommitMessage(options.branchNameBox.format, selectedTicket);
-				textareaBranchName.value = branchName;
-				updateCharacterCount();
+            }
 
-			}
+            function setData() {
 
-			function updateCharacterCount() {
+                branchName = global.GetFormattedCommitMessage(options.branchNameBox.format, selectedTicket);
+                textareaBranchName.value = branchName;
+                updateCharacterCount();
 
-				spanCharacterCount.innerHTML = 'Character count: ' + (branchName ? branchName.length : '0');
+            }
 
-			}
+            function updateCharacterCount() {
 
-			return {
+                spanCharacterCount.innerHTML = 'Character count: ' + (branchName ? branchName.length : '0');
 
-				init: init
+            }
 
-			};
+            return {
 
-		})();
+                init: init
 
-		const worklogBox = (function () {
+            };
 
-			// UI elements
-			let divModule = null;
-			let titleHeader;
-			let contentTextElement;
-			let issueCount;
-			let buttonShowIssues;
-			let buttonChangeStartDate;
+        })();
 
-			function createUi() {
+        const worklogBox = (function () {
 
-				divModule = document.createElement('div');
-				divModule.id = options.workLogBox.divModuleId;
-				divModule.className = 'module toggle-wrap' + (options.workLogBox.collapsed ? ' collapsed' : '');
-				divModule.style.padding = '0';
-				divModule.style.margin = '0';
+            // UI elements
+            let divModule = null;
+            let titleHeader;
+            let contentTextElement;
+            let issueCount;
+            let buttonShowIssues;
+            let buttonChangeStartDate;
 
-				let divHeader = document.createElement('div');
-				divHeader.id = 'worklogcalculator_heading';
-				divHeader.className = 'mod-header';
+            function createUi() {
 
-				titleHeader = document.createElement('h2');
-				titleHeader.id = 'cm-title-header-work-log';
-				titleHeader.className = 'toggle-title';
-				titleHeader.appendChild(document.createTextNode('Weekly Work Log'));
+                divModule = document.createElement('div');
+                divModule.id = options.workLogBox.divModuleId;
+                divModule.className = 'module toggle-wrap' + (options.workLogBox.collapsed ? ' collapsed' : '');
+                divModule.style.padding = '0';
+                divModule.style.margin = '0';
 
-				let divContent = document.createElement('div');
-				divContent.className = 'mod-content';
-				divContent.style.marginBottom = '20px';
+                let divHeader = document.createElement('div');
+                divHeader.id = 'worklogcalculator_heading';
+                divHeader.className = 'mod-header';
 
-				buttonShowIssues = document.createElement('a');
-				buttonShowIssues.id = 'cm-button-show-issues';
-				buttonShowIssues.className = 'switcher-item cm-a-button';
-				buttonShowIssues.appendChild(document.createTextNode('Show the issues'));
-				buttonShowIssues.style.marginLeft = '0';
+                titleHeader = document.createElement('h2');
+                titleHeader.id = 'cm-title-header-work-log';
+                titleHeader.className = 'toggle-title';
+                titleHeader.appendChild(document.createTextNode('Weekly Work Log'));
 
-				buttonChangeStartDate = document.createElement('a');
-				buttonChangeStartDate.id = 'cm-button-change-start-date';
-				buttonChangeStartDate.className = 'switcher-item cm-a-button';
-				buttonChangeStartDate.appendChild(document.createTextNode('Change the start date'));
-				buttonChangeStartDate.style.marginLeft = '0';
+                let divContent = document.createElement('div');
+                divContent.className = 'mod-content';
 
-				contentTextElement = document.createElement('p');
+                buttonShowIssues = document.createElement('a');
+                buttonShowIssues.id = 'cm-button-show-issues';
+                buttonShowIssues.className = 'switcher-item cm-a-button';
+                buttonShowIssues.appendChild(document.createTextNode('Show the issues'));
+                buttonShowIssues.style.marginLeft = '0';
 
-				divContent.appendChild(contentTextElement);
-				divContent.appendChild(buttonShowIssues);
-				divContent.appendChild(document.createElement('br'));
-				divContent.appendChild(buttonChangeStartDate);
-				divHeader.appendChild(titleHeader);
-				divModule.appendChild(divHeader);
-				divModule.appendChild(divContent);
+                buttonChangeStartDate = document.createElement('a');
+                buttonChangeStartDate.id = 'cm-button-change-start-date';
+                buttonChangeStartDate.className = 'switcher-item cm-a-button';
+                buttonChangeStartDate.appendChild(document.createTextNode('Change the start date'));
+                buttonChangeStartDate.style.marginLeft = '0';
 
-				viewIssueSidebar.insertBefore(divModule, viewIssueSidebar.firstChild);
+                contentTextElement = document.createElement('p');
 
-			}
+                divContent.appendChild(contentTextElement);
+                divContent.appendChild(buttonShowIssues);
+                divContent.appendChild(document.createElement('br'));
+                divContent.appendChild(buttonChangeStartDate);
+                divHeader.appendChild(titleHeader);
+                divModule.appendChild(divHeader);
+                divModule.appendChild(divContent);
 
-			function setEventHandlers() {
+                viewIssueSidebar.insertBefore(divModule, viewIssueSidebar.firstChild);
 
-				titleHeader.addEventListener('click', function () {
-					// Set collapsed status
-					const isCollapsed = !divModule.className.includes('collapsed');
-					global.SetOptions({ isWorkLogDivCollapsed: isCollapsed });
-				});
+            }
 
-				buttonChangeStartDate.addEventListener('click', function () {
-					// Open date dialog
-					let date = prompt('Enter the start date in \'YYYY-MM-DD\' format:');
-					setData(date);
-				});
+            function setEventHandlers() {
 
-				buttonShowIssues.addEventListener('click', function () {
-					// Show the calculated issues in Jira
-					let sd = startDate.getFullYear() + '-' + (startDate.getMonth() + 1) + '-' + startDate.getDate();
-					window.open(window.location.origin + '/issues/?jql=(assignee%20=%20currentUser()%20OR%20reporter%20=%20currentUser())%20AND%20worklogDate%20%3E=%20' + sd + '%20ORDER%20BY%20issuekey%20ASC', '_blank').focus();
-				});
+                titleHeader.addEventListener('click', function () {
+                    // Set collapsed status
+                    const isCollapsed = !divModule.className.includes('collapsed');
+                    global.SetOptions({ isWorkLogDivCollapsed: isCollapsed });
+                });
 
-			}
+                buttonChangeStartDate.addEventListener('click', function () {
+                    // Open date dialog
+                    let date = prompt('Enter the start date in \'YYYY-MM-DD\' format:');
+                    setData(date);
+                });
 
-			function setData(dateString = 'startOfWeek()') {
+                buttonShowIssues.addEventListener('click', function () {
+                    // Show the calculated issues in Jira
+                    window.open(window.location.origin + '/issues/?jql=(assignee%20=%20currentUser()%20OR%20reporter%20=%20currentUser())%20AND%20worklogDate%20%3E=%20' + global.DateToJqlString(startDate) + '%20ORDER%20BY%20issuekey%20ASC', '_blank').focus();
+                });
 
-				let date = new Date(dateString);
+            }
 
-				if (dateString === 'startOfWeek()') {
-					startDate = global.GetMondayOfCurrentWeek();
-				}
-				else if (global.IsValidDate(date)) {
-					startDate = date;
-				} else {
-					alert('The date is not valid.');
-					return;
-				}
+            function setData(dateString = 'startOfWeek()') {
 
-				contentTextElement.innerHTML = 'Loading...';
+                let date = new Date(dateString);
 
-				// Calculate the worklog for the current week
-				global.GetJSON(window.location.origin + '/rest/api/latest/search?jql=(assignee%20=%20currentUser()%20OR%20reporter%20=%20currentUser())%20AND%20worklogDate%20%3E=%20' + dateString + '%20ORDER%20BY%20issuekey%20ASC',
-					function (err, data) {
+                if (dateString === 'startOfWeek()') {
+                    startDate = global.GetMondayOfCurrentWeek();
+                }
+                else if (global.IsValidDate(date)) {
+                    startDate = date;
+                } else {
+                    alert('The date is not valid.');
+                    return;
+                }
 
-						issueCount = data.issues.length;
-						getAllTicketWorklogsForTheCurrentWeek(data.issues);
+                contentTextElement.innerHTML = 'Loading...';
 
-					}
-				);
+                // Calculate the worklog for the current week
+                global.GetJSON(window.location.origin + '/rest/api/latest/search?jql=(assignee%20=%20currentUser()%20OR%20reporter%20=%20currentUser())%20AND%20worklogDate%20%3E=%20' + global.DateToJqlString(startDate) + '%20ORDER%20BY%20issuekey%20ASC',
+                    function (err, data) {
 
-			}
+                        issueCount = data.issues.length;
+                        getAllTicketWorklogsForTheCurrentWeek(data.issues);
 
-			function getAllTicketWorklogsForTheCurrentWeek(issues) {
+                    }
+                );
 
-				if (issues !== null && issues.length > 0 && issues[0] !== null) {
+            }
 
-					let issue = issues[0];
+            function getAllTicketWorklogsForTheCurrentWeek(issues) {
 
-					global.GetJSON(window.location.origin + '/rest/api/latest/issue/' + issue.key,
-						function (err1, data1) {
+                if (issues !== null && issues.length > 0 && issues[0] !== null) {
 
-							for (let j = 0; j < data1.fields.worklog.worklogs.length; j++) {
+                    let issue = issues[0];
 
-								if (startDate <= new Date(data1.fields.worklog.worklogs[j].started)) {
-									lastWeekWorkLogCountAsSeconds += data1.fields.worklog.worklogs[j].timeSpentSeconds;
-								}
+                    global.GetJSON(window.location.origin + '/rest/api/latest/issue/' + issue.key,
+                        function (err1, data1) {
 
-							}
+                            for (let j = 0; j < data1.fields.worklog.worklogs.length; j++) {
 
-							issues.shift(); // remove the first element
-							getAllTicketWorklogsForTheCurrentWeek(issues); // switch to the next element
+                                if (startDate <= new Date(data1.fields.worklog.worklogs[j].started)) {
+                                    lastWeekWorkLogCountAsSeconds += data1.fields.worklog.worklogs[j].timeSpentSeconds;
+                                }
 
-						}
-					);
+                            }
 
-				} else {
+                            issues.shift(); // remove the first element
+                            getAllTicketWorklogsForTheCurrentWeek(issues); // switch to the next element
 
-					// done
+                        }
+                    );
 
-					let totalHours = lastWeekWorkLogCountAsSeconds / 3600; // convert from seconds to hours
+                } else {
 
-					let contentTextInnerHtmlText =
-						totalHours + ' hours || ' + parseInt(totalHours / 8) + 'd ' + (totalHours % 8) + 'h' +
-						'<br>' +
-						'<small><i>' +
-						issueCount + ' issues in total' +
-						'<br>' +
-						'starting from: ' + global.GetFormattedDateString(startDate) +
-						'</i></small>';
+                    // done
 
-					contentTextElement.innerHTML = contentTextInnerHtmlText;
+                    let totalHours = lastWeekWorkLogCountAsSeconds / 3600; // convert from seconds to hours
 
-					issueCount = 0; // reset the count
-					lastWeekWorkLogCountAsSeconds = 0; // reset the sum
-				}
+                    let contentTextInnerHtmlText =
+                        totalHours + ' hours || ' + parseInt(totalHours / 8) + 'd ' + (totalHours % 8) + 'h' +
+                        '<br>' +
+                        '<small><i>' +
+                        issueCount + ' issues in total' +
+                        ' || ' +
+                        'starting from: ' + global.GetFormattedDateString(startDate) +
+                        '</i></small>';
 
-			}
+                    contentTextElement.innerHTML = contentTextInnerHtmlText;
 
-			const init = function () {
+                    issueCount = 0; // reset the count
+                    lastWeekWorkLogCountAsSeconds = 0; // reset the sum
+                }
 
-				createUi();
-				setEventHandlers();
-				setData();
+            }
 
-			};
+            const init = function () {
 
-			return {
+                createUi();
+                setEventHandlers();
+                setData();
 
-				init: init
+            };
 
-			};
+            return {
 
-		})();
+                init: init
 
-		const init = function () {
+            };
 
-			let isInitInProgress = false;
+        })();
 
-			setInterval(function () {
+        const init = function () {
 
-				if (
-					(document.getElementById('viewissuesidebar') || document.getElementById('ghx-detail-view')) &&
-					(
-						(!document.getElementById(options.commitMessageBox.divModuleId) && options.commitMessageBox.visible) ||
-						(!document.getElementById(options.branchNameBox.divModuleId) && options.branchNameBox.visible)
-					) &&
-					!isInitInProgress
-				) {
+            let isInitInProgress = false;
 
-					isInitInProgress = true;
+            setInterval(function () {
 
-					viewIssueSidebar = document.getElementById('viewissuesidebar') || document.getElementById('ghx-detail-view').childNodes[0].childNodes[1].childNodes[0].childNodes[0].childNodes[0];
+                if (
+                    (document.getElementById('viewissuesidebar') || document.getElementById('ghx-detail-view')) &&
+                    (
+                        (!document.getElementById(options.commitMessageBox.divModuleId) && options.commitMessageBox.visible) ||
+                        (!document.getElementById(options.branchNameBox.divModuleId) && options.branchNameBox.visible)
+                    ) &&
+                    !isInitInProgress
+                ) {
 
-					global.GetAllOptions(function (result) {
+                    isInitInProgress = true;
 
-						// Set options
-						options.commitMessageBox.visible = result.commitMessageBoxVisible;
-						options.commitMessageBox.collapsed = result.isCommitMessageDivCollapsed;
-						options.commitMessageBox.format = result.commitMessageFormat;
-						options.branchNameBox.visible = result.branchNameBoxVisible;
-						options.branchNameBox.collapsed = result.isBranchNameDivCollapsed;
-						options.branchNameBox.format = result.branchNameFormat;
-						options.workLogBox.visible = result.workLogBoxVisible;
-						options.workLogBox.collapsed = result.isWorkLogDivCollapsed;
+                    viewIssueSidebar = document.getElementById('viewissuesidebar') || document.getElementById('ghx-detail-view').childNodes[0].childNodes[1].childNodes[0].childNodes[0].childNodes[0];
 
-						// Wait for the UI elements load
-						const intervalData = setInterval(function () {
+                    global.GetAllOptions(function (result) {
 
-							let ticketTypeElement = document.getElementById('type-val');
-							let ticketNumberElement = document.getElementById('key-val');
-							let ticketSummaryElement = document.getElementById('summary-val');
-							let ticketAssigneeElement = document.getElementById('assignee-val');
-							let ticketPriorityElement = document.getElementById('priority-val');
-							let ticketStoryPointsElement = document.getElementById('customfieldmodule');
-							ticketStoryPointsElement = ticketStoryPointsElement ? ticketStoryPointsElement.querySelector('strong[title="Story Points"]') : null;
-							ticketStoryPointsElement = ticketStoryPointsElement ? ticketStoryPointsElement.nextElementSibling : null;
-							let ticketDescriptionElement = document.getElementById('description-val');
+                        // Set options
+                        options.commitMessageBox.visible = result.commitMessageBoxVisible;
+                        options.commitMessageBox.collapsed = result.isCommitMessageDivCollapsed;
+                        options.commitMessageBox.format = result.commitMessageFormat;
+                        options.branchNameBox.visible = result.branchNameBoxVisible;
+                        options.branchNameBox.collapsed = result.isBranchNameDivCollapsed;
+                        options.branchNameBox.format = result.branchNameFormat;
+                        options.workLogBox.visible = result.workLogBoxVisible;
+                        options.workLogBox.collapsed = result.isWorkLogDivCollapsed;
 
-							let ghxSelectedPrimaryList = document.getElementsByClassName('ghx-selected-primary');
-							let ghxSelectedPrimary = null;
+                        // Wait for the UI elements load
+                        const intervalData = setInterval(function () {
 
-							if (ghxSelectedPrimaryList && ghxSelectedPrimaryList.length > 0) {
+                            let ticketTypeElement = document.getElementById('type-val');
+                            let ticketNumberElement = document.getElementById('key-val');
+                            let ticketSummaryElement = document.getElementById('summary-val');
+                            let ticketAssigneeElement = document.getElementById('assignee-val');
+                            let ticketPriorityElement = document.getElementById('priority-val');
+                            let ticketStoryPointsElement = document.getElementById('customfieldmodule');
+                            ticketStoryPointsElement = ticketStoryPointsElement ? ticketStoryPointsElement.querySelector('strong[title="Story Points"]') : null;
+                            ticketStoryPointsElement = ticketStoryPointsElement ? ticketStoryPointsElement.nextElementSibling : null;
+                            let ticketDescriptionElement = document.getElementById('description-val');
 
-								ghxSelectedPrimary = ghxSelectedPrimaryList[0];
+                            let ghxSelectedPrimaryList = document.getElementsByClassName('ghx-selected-primary');
+                            let ghxSelectedPrimary = null;
 
-								let ghxTypes = ghxSelectedPrimary.getElementsByClassName('ghx-type');
-								let ghxKeys = ghxSelectedPrimary.getElementsByClassName('ghx-key');
-								let ghxInners = ghxSelectedPrimary.getElementsByClassName('ghx-inner');
-								let ghxAvatarImgs = ghxSelectedPrimary.getElementsByClassName('ghx-avatar-img');
-								let ghxPriorities = ghxSelectedPrimary.getElementsByClassName('ghx-priority');
+                            if (ghxSelectedPrimaryList && ghxSelectedPrimaryList.length > 0) {
 
-								if (ghxTypes && ghxTypes.length > 0)
-									ticketTypeElement = ghxTypes[0];
+                                ghxSelectedPrimary = ghxSelectedPrimaryList[0];
 
-								if (ghxKeys && ghxKeys.length > 0)
-									ticketNumberElement = ghxKeys[0];
+                                let ghxTypes = ghxSelectedPrimary.getElementsByClassName('ghx-type');
+                                let ghxKeys = ghxSelectedPrimary.getElementsByClassName('ghx-key');
+                                let ghxInners = ghxSelectedPrimary.getElementsByClassName('ghx-inner');
+                                let ghxAvatarImgs = ghxSelectedPrimary.getElementsByClassName('ghx-avatar-img');
+                                let ghxPriorities = ghxSelectedPrimary.getElementsByClassName('ghx-priority');
 
-								if (ghxInners && ghxInners.length > 0)
-									ticketSummaryElement = ghxInners[0];
+                                if (ghxTypes && ghxTypes.length > 0)
+                                    ticketTypeElement = ghxTypes[0];
 
-								if (ghxAvatarImgs && ghxAvatarImgs.length > 0)
-									ticketAssigneeElement = ghxAvatarImgs[0];
+                                if (ghxKeys && ghxKeys.length > 0)
+                                    ticketNumberElement = ghxKeys[0];
 
-								if (ghxPriorities && ghxPriorities.length > 0)
-									ticketPriorityElement = ghxPriorities[0];
+                                if (ghxInners && ghxInners.length > 0)
+                                    ticketSummaryElement = ghxInners[0];
 
-								ticketStoryPointsElement = ghxSelectedPrimary.querySelector('span[title="Story Points"]');
+                                if (ghxAvatarImgs && ghxAvatarImgs.length > 0)
+                                    ticketAssigneeElement = ghxAvatarImgs[0];
 
-								// TODO: add description element too (if any)
+                                if (ghxPriorities && ghxPriorities.length > 0)
+                                    ticketPriorityElement = ghxPriorities[0];
 
-							}
+                                ticketStoryPointsElement = ghxSelectedPrimary.querySelector('span[title="Story Points"]');
 
-							if (!ticketNumberElement || !ticketSummaryElement || !ticketTypeElement) return;
+                                // TODO: add description element too (if any)
 
-							clearInterval(intervalData);
+                            }
 
-							if (ghxSelectedPrimary) {
-								selectedTicket.type = ticketTypeElement ? ticketTypeElement.getAttribute('title') : '';
-								selectedTicket.number = ticketNumberElement ? ticketNumberElement.getAttribute('title') : '';
-								selectedTicket.summary = ticketSummaryElement ? ticketSummaryElement.textContent : '';
-								selectedTicket.assignee = (ticketAssigneeElement && ticketAssigneeElement.getAttribute('alt') && ticketAssigneeElement.getAttribute('alt').includes(': ')) ? ticketAssigneeElement.getAttribute('alt').split(': ')[1] : '';
-								selectedTicket.priority = ticketPriorityElement ? ticketPriorityElement.getAttribute('title') : '';
-								selectedTicket.storyPoints = ticketStoryPointsElement && ticketStoryPointsElement.textContent ? ticketStoryPointsElement.textContent.trim() : '';
-								selectedTicket.description = '';
-							}
-							else {
-								selectedTicket.type = ticketTypeElement && ticketTypeElement.textContent ? ticketTypeElement.textContent.trim() : '';
-								selectedTicket.number = ticketNumberElement && ticketNumberElement.textContent ? ticketNumberElement.textContent.trim() : '';
-								selectedTicket.summary = ticketSummaryElement && ticketSummaryElement.textContent ? ticketSummaryElement.textContent.trim() : '';
-								selectedTicket.assignee = (ticketAssigneeElement && ticketAssigneeElement.childNodes && ticketAssigneeElement.childNodes.length > 1 && ticketAssigneeElement.childNodes[1].textContent) ? ticketAssigneeElement.childNodes[1].textContent.trim() : '';
-								selectedTicket.priority = ticketPriorityElement && ticketPriorityElement.textContent ? ticketPriorityElement.textContent.trim() : '';
-								selectedTicket.storyPoints = ticketStoryPointsElement && ticketStoryPointsElement.textContent ? ticketStoryPointsElement.textContent.trim() : '';
-								selectedTicket.description = ticketDescriptionElement && ticketDescriptionElement.textContent ? ticketDescriptionElement.textContent.trim() : '';
-							}
+                            if (!ticketNumberElement || !ticketSummaryElement || !ticketTypeElement) return;
 
-							// Ordering is backwards
-							if (options.branchNameBox.visible) {
-								branchNameBox.init();
-							}
+                            clearInterval(intervalData);
 
-							if (options.commitMessageBox.visible) {
-								commitMessageBox.init();
-							}
+                            if (ghxSelectedPrimary) {
+                                selectedTicket.type = ticketTypeElement ? ticketTypeElement.getAttribute('title') : '';
+                                selectedTicket.number = ticketNumberElement ? ticketNumberElement.getAttribute('title') : '';
+                                selectedTicket.summary = ticketSummaryElement ? ticketSummaryElement.textContent : '';
+                                selectedTicket.assignee = (ticketAssigneeElement && ticketAssigneeElement.getAttribute('alt') && ticketAssigneeElement.getAttribute('alt').includes(': ')) ? ticketAssigneeElement.getAttribute('alt').split(': ')[1] : '';
+                                selectedTicket.priority = ticketPriorityElement ? ticketPriorityElement.getAttribute('title') : '';
+                                selectedTicket.storyPoints = ticketStoryPointsElement && ticketStoryPointsElement.textContent ? ticketStoryPointsElement.textContent.trim() : '';
+                                selectedTicket.description = '';
+                            }
+                            else {
+                                selectedTicket.type = ticketTypeElement && ticketTypeElement.textContent ? ticketTypeElement.textContent.trim() : '';
+                                selectedTicket.number = ticketNumberElement && ticketNumberElement.textContent ? ticketNumberElement.textContent.trim() : '';
+                                selectedTicket.summary = ticketSummaryElement && ticketSummaryElement.textContent ? ticketSummaryElement.textContent.trim() : '';
+                                selectedTicket.assignee = (ticketAssigneeElement && ticketAssigneeElement.childNodes && ticketAssigneeElement.childNodes.length > 1 && ticketAssigneeElement.childNodes[1].textContent) ? ticketAssigneeElement.childNodes[1].textContent.trim() : '';
+                                selectedTicket.priority = ticketPriorityElement && ticketPriorityElement.textContent ? ticketPriorityElement.textContent.trim() : '';
+                                selectedTicket.storyPoints = ticketStoryPointsElement && ticketStoryPointsElement.textContent ? ticketStoryPointsElement.textContent.trim() : '';
+                                selectedTicket.description = ticketDescriptionElement && ticketDescriptionElement.textContent ? ticketDescriptionElement.textContent.trim() : '';
+                            }
 
-							if (options.workLogBox.visible) {
-								worklogBox.init();
-							}
+                            // Ordering is backwards
+                            if (options.branchNameBox.visible) {
+                                branchNameBox.init();
+                            }
 
-							isInitInProgress = false;
+                            if (options.commitMessageBox.visible) {
+                                commitMessageBox.init();
+                            }
 
-						}, 500);
+                            if (options.workLogBox.visible) {
+                                worklogBox.init();
+                            }
 
-					});
+                            isInitInProgress = false;
 
-				}
+                        }, 500);
 
-			}, 1000);
+                    });
 
-		};
+                }
 
-		return {
+            }, 1000);
 
-			init: init
+        };
 
-		};
+        return {
 
-	})();
+            init: init
 
-	app.init();
+        };
+
+    })();
+
+    app.init();
 
 }(window, document));
