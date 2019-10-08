@@ -1,149 +1,147 @@
 (function (global) {
 
-    const console = global.console;
+	const console = global.console;
 
-    const commitMessageFormatDefault = '{LOWERCASE}{TICKET_TYPE}{/LOWERCASE}({UPPERCASE}{TICKET_NUMBER}{/UPPERCASE}): {TICKET_SUMMARY}{NEWLINE}{NEWLINE}';
-    const branchNameFormatDefault = '{LOWERCASE}{TICKET_TYPE}{/LOWERCASE}/{UPPERCASE}{TICKET_NUMBER}{/UPPERCASE}-';
+	const commitMessageFormatDefault = '{LOWERCASE}{TICKET_TYPE}{/LOWERCASE}({UPPERCASE}{TICKET_NUMBER}{/UPPERCASE}): {TICKET_SUMMARY}{NEWLINE}{NEWLINE}';
+	const branchNameFormatDefault = '{LOWERCASE}{TICKET_TYPE}{/LOWERCASE}/{UPPERCASE}{TICKET_NUMBER}{/UPPERCASE}-';
 
     /**
      * Fired when a tab is updated. Injects content script to issue tracker pages.
      */
-    chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+	chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
 
-        if (!changeInfo || !changeInfo.status || changeInfo.status !== 'complete') return;
+		if (!changeInfo || !changeInfo.status || changeInfo.status !== 'complete') return;
 
-        chrome.tabs.sendMessage(tab.id, { text: 'isContentScriptInjected' }, function (isContentScriptInjected) {
+		chrome.tabs.sendMessage(tab.id, { text: 'isContentScriptInjected' }, function (isContentScriptInjected) {
 
-            // To avoid duplicate injections.
-            if (isContentScriptInjected) return;
+			// To avoid duplicate injections.
+			if (isContentScriptInjected) return;
 
+			let url = tab.url;
+			let tabId = tab.id;
+			let tabTitle = tab.title;
 
-            chrome.tabs.query({}, function (tabs) {
+			const contentScriptJsContainerPath = 'scripts/contents/';
+			const contentScriptCssContainerPath = 'styles/';
+			const helperJsFilePath = 'scripts/libs/helper.js';
+			const jiraDarkModeCssName = 'content_jira_darkmode.css';
+			let contentScriptJsName = '';
+			let contentScriptCssName = '';
 
-                let url = '';
+			if ((url.includes('http://atlassian') || url.includes('https://atlassian') || url.includes('http://jira') || url.includes('https://jira'))
+				&& !url.includes('jira.issueviews:issue-html')) {
 
-                for (let i = 0; i < tabs.length; i++) {
+				contentScriptCssName = 'content_jira.css';
+				contentScriptJsName = 'content_jira.js';
 
-                    if (tabs[i].id === tab.id) {
+				global.GetOptions([global.OptionsArray.isDarkMode], function (result) {
 
-                        url = tabs[i].url;
+					if (!result.isDarkMode) return;
 
-                    }
+					chrome.tabs.insertCSS(tabId, { file: contentScriptCssContainerPath + jiraDarkModeCssName }, function (result) {
+						console.log('Injected ' + contentScriptCssContainerPath + jiraDarkModeCssName + ' to ' + url);
+					});
 
-                }
+				});
 
-                const contentScriptJsContainerPath = 'scripts/contents/';
-                const contentScriptCssContainerPath = 'styles/';
-                const helperJsFilePath = 'scripts/libs/helper.js';
-                const jiraDarkModeCssName = 'content_jira_darkmode.css';
-                let contentScriptJsName = '';
-                let contentScriptCssName = '';
+				chrome.tabs.executeScript(tabId, { file: helperJsFilePath, allFrames: false }, function (result) {
+					console.log('Injected ' + helperJsFilePath + ' to ' + url);
+				});
 
-                if ((url.includes('http://atlassian') || url.includes('https://atlassian') || url.includes('http://jira') || url.includes('https://jira'))
-                    && !url.includes('jira.issueviews:issue-html')) {
+				chrome.tabs.executeScript(tabId, { file: contentScriptJsContainerPath + contentScriptJsName, allFrames: false }, function (result) {
+					console.log('Injected ' + contentScriptJsContainerPath + contentScriptJsName + ' to ' + url);
+				});
 
-                    contentScriptCssName = 'content_jira.css';
-                    contentScriptJsName = 'content_jira.js';
+				chrome.tabs.insertCSS(tabId, { file: contentScriptCssContainerPath + contentScriptCssName }, function (result) {
+					console.log('Injected ' + contentScriptCssContainerPath + contentScriptJsName + ' to ' + url);
+				});
 
-                }
+			}
+			//else if (url.includes('bamboo') || tabTitle.toLowerCase().includes('bamboo')) {
 
-                if (!contentScriptJsName) return;
+			//	global.GetOptions([global.OptionsArray.isDarkMode], function (result) {
 
-                global.GetOptions([global.OptionsArray.isDarkMode], function (result) {
+			//		if (!result.isDarkMode) return;
 
-                    if (!result.isDarkMode) return;
+			//		chrome.tabs.insertCSS(tabId, { file: contentScriptCssContainerPath + jiraDarkModeCssName }, function (result) {
+			//			console.log('Injected ' + contentScriptCssContainerPath + jiraDarkModeCssName + ' to ' + url);
+			//		});
 
-                    chrome.tabs.insertCSS(tabId, { file: contentScriptCssContainerPath + jiraDarkModeCssName }, function (result) {
-                        console.log('Injected ' + contentScriptCssContainerPath + jiraDarkModeCssName + ' to ' + url);
-                    });
+			//	});
 
-                });
+			//}
 
-                chrome.tabs.executeScript(tabId, { file: helperJsFilePath, allFrames: false }, function (result) {
-                    console.log('Injected ' + helperJsFilePath + ' to ' + url);
-                });
+		});
 
-                chrome.tabs.executeScript(tabId, { file: contentScriptJsContainerPath + contentScriptJsName, allFrames: false }, function (result) {
-                    console.log('Injected ' + contentScriptJsContainerPath + contentScriptJsName + ' to ' + url);
-                });
-
-                chrome.tabs.insertCSS(tabId, { file: contentScriptCssContainerPath + contentScriptCssName }, function (result) {
-                    console.log('Injected ' + contentScriptCssContainerPath + contentScriptJsName + ' to ' + url);
-                });
-
-            });
-
-        });
-
-    });
+	});
 
     /**
      * Called when the extension installed.
      */
-    chrome.runtime.onInstalled.addListener(function (details) {
+	chrome.runtime.onInstalled.addListener(function (details) {
 
-        // Set the defaults for initial launch
-        global.GetAllOptions(function (result) {
+		// Set the defaults for initial launch
+		global.GetAllOptions(function (result) {
 
-            if (!result) return;
+			if (!result) return;
 
-            // Save the default options
-            global.SetOptions({
+			// Save the default options
+			global.SetOptions({
 
-                commitMessageBoxVisible: result.commitMessageBoxVisible != null ? result.commitMessageBoxVisible : true,
-                isCommitMessageDivCollapsed: result.isCommitMessageDivCollapsed != null ? result.isCommitMessageDivCollapsed : false,
-                commitMessageFormat: result.commitMessageFormat != null ? result.commitMessageFormat : commitMessageFormatDefault,
-                previousCommitMessageFormats: result.previousCommitMessageFormats != null ? result.previousCommitMessageFormats : [commitMessageFormatDefault],
+				commitMessageBoxVisible: result.commitMessageBoxVisible != null ? result.commitMessageBoxVisible : true,
+				isCommitMessageDivCollapsed: result.isCommitMessageDivCollapsed != null ? result.isCommitMessageDivCollapsed : false,
+				commitMessageFormat: result.commitMessageFormat != null ? result.commitMessageFormat : commitMessageFormatDefault,
+				previousCommitMessageFormats: result.previousCommitMessageFormats != null ? result.previousCommitMessageFormats : [commitMessageFormatDefault],
 
-                branchNameBoxVisible: result.branchNameBoxVisible != null ? result.branchNameBoxVisible : true,
-                isBranchNameDivCollapsed: result.isBranchNameDivCollapsed != null ? result.isBranchNameDivCollapsed : false,
-                branchNameFormat: result.branchNameFormat != null ? result.branchNameFormat : branchNameFormatDefault,
-                previousBranchNameFormats: result.previousBranchNameFormats != null ? result.previousBranchNameFormats : [branchNameFormatDefault],
+				branchNameBoxVisible: result.branchNameBoxVisible != null ? result.branchNameBoxVisible : true,
+				isBranchNameDivCollapsed: result.isBranchNameDivCollapsed != null ? result.isBranchNameDivCollapsed : false,
+				branchNameFormat: result.branchNameFormat != null ? result.branchNameFormat : branchNameFormatDefault,
+				previousBranchNameFormats: result.previousBranchNameFormats != null ? result.previousBranchNameFormats : [branchNameFormatDefault],
 
-                workLogBoxVisible: result.workLogBoxVisible != null ? result.workLogBoxVisible : true,
-                isWorkLogDivCollapsed: result.isWorkLogDivCollapsed != null ? result.isWorkLogDivCollapsed : false,
+				workLogBoxVisible: result.workLogBoxVisible != null ? result.workLogBoxVisible : true,
+				isWorkLogDivCollapsed: result.isWorkLogDivCollapsed != null ? result.isWorkLogDivCollapsed : false,
 
-                isDarkMode: false
+				isDarkMode: false
 
-            });
+			});
 
-        });
+		});
 
-    });
+	});
 
     /**
      * Opens the options page in a new tab or focuses to the opened tab.
      */
-    function openOrFocusOptionsPage() {
+	function openOrFocusOptionsPage() {
 
-        var optionsUrl = chrome.extension.getURL('options.html');
+		var optionsUrl = chrome.extension.getURL('options.html');
 
-        chrome.tabs.query({}, function (extensionTabs) {
+		chrome.tabs.query({}, function (extensionTabs) {
 
-            let found = false;
+			let found = false;
 
-            for (let i = 0; i < extensionTabs.length; i++) {
-                if (optionsUrl === extensionTabs[i].url) {
-                    found = true;
-                    chrome.tabs.update(extensionTabs[i].id, { "selected": true });
-                }
-            }
+			for (let i = 0; i < extensionTabs.length; i++) {
+				if (optionsUrl === extensionTabs[i].url) {
+					found = true;
+					chrome.tabs.update(extensionTabs[i].id, { "selected": true });
+				}
+			}
 
-            if (!found) {
-                chrome.tabs.create({ url: "options.html" });
-            }
+			if (!found) {
+				chrome.tabs.create({ url: "options.html" });
+			}
 
-        });
+		});
 
-    }
+	}
 
     /**
      * Called when the user clicks on the browser action icon.
      */
-    chrome.browserAction.onClicked.addListener(function (tab) {
+	chrome.browserAction.onClicked.addListener(function (tab) {
 
-        openOrFocusOptionsPage();
+		openOrFocusOptionsPage();
 
-    });
+	});
 
 }(window));
