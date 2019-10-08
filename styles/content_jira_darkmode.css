@@ -172,12 +172,12 @@
 }
 
 /* TEXTS */
-body, h1, h2, h3, h4, h5, label, button, span:not(.aui-lozenge), strong, input, .aui-nav a, textarea, input.long-field, .item-details a, .issue-data-block a, .filter-actions, .stsequence, .action-description, .aui-button-light, #issuetable .resolution, .issuerow .assignee, .qf-picker-buttons span, .ghx-project, .ghx-detail-description, .js-subtask-issue, .ghx-controls .aui-button, .ghx-controls-work .aui-button, table.aui tr, .dashboard-item-content thead, .syntax-help-container, .dropdown-ready li, .aui-message, .aui-dropdown2 {
+body, h1, h2, h3, h4, h5, label, button, span:not(.aui-lozenge):not(.aui-iconfont-approve):not(.aui-iconfont-devtools-task-disabled):not(.aui-iconfont-error), strong, input, .aui-nav a, textarea, input.long-field, .item-details a, .issue-data-block a, .filter-actions, .stsequence, .action-description, .aui-button-light, #issuetable .resolution, .issuerow .assignee, .qf-picker-buttons span, .ghx-project, .ghx-detail-description, .js-subtask-issue, .ghx-controls .aui-button, .ghx-controls-work .aui-button, table.aui tr, .dashboard-item-content thead, .syntax-help-container, .dropdown-ready li, .aui-message, .aui-dropdown2 {
 	color: #d1d1d1 !important;
 	text-shadow: none !important;
 }
 
-a, .aui-button-link, .devstatus-entry .summary, .item-details a, .view-issue-field, .search-entry, ul.saved-filter a.active, .jira-dialog .long-field, .jira-dialog input, .aui-badge {
+a:not(.statusIndicator), .aui-button-link, .devstatus-entry .summary, .item-details a, .view-issue-field, .search-entry, ul.saved-filter a.active, .jira-dialog .long-field, .jira-dialog input, .aui-badge {
 	color: white !important;
 }
 
@@ -185,15 +185,11 @@ td.activity-name, .item-details dt, .tt_text, #devstatus-container.dev-status-co
 	color: #bababa !important;
 }
 
-.criteria-selector:after, .add-criteria:after, .aui-button-light:after, .filter-list > li .filter-actions > span:after, .aui-dd-parent a:after, .icon:after, #qf-field-picker-trigger:after, #ghx-modes-tools .aui-button:after, .ghx-controls .aui-button:after, .ghx-controls-work .aui-button:after, .aui-button:after, .order-options:after {
+.criteria-selector:after, .add-criteria:after, .aui-button-light:after, .filter-list > li .filter-actions > span:after, .aui-dd-parent a:after, .icon:after:not(.icon-next):not(.icon-page-prev):not(.icon-page-prev-deactivated), #qf-field-picker-trigger:after, #ghx-modes-tools .aui-button:after, .ghx-controls .aui-button:after, .ghx-controls-work .aui-button:after, .aui-button:after, .order-options:after {
 	border-top-color: #d1d1d1 !important;
 }
 
-.icon-page-prev:after, .icon-page-prev-deactivated:after {
-	border-top-color: transparent !important;
-}
-
-td.status span, span.value-text, .aui-nav-selected span, .aui-sidebar-group .aui-nav-item-label, .labels .lozenge span {
+td.status span, span.value-text, .aui-nav-selected span, .aui-sidebar-group .aui-nav-item-label {
 	color: #2b2b2b !important;
 }
 
@@ -206,7 +202,7 @@ td.status span, span.value-text, .aui-nav-selected span, .aui-sidebar-group .aui
 		background: #333333 !important;
 	}
 
-		.aui-page-panel, .dashboard-item-content, input.long-field, .aui-badge, .issue-data-block:hover, .issue-data-block.focused, textarea:focus, .cm-input:focus, .editable-field:hover, .links-list > dd:hover, .ops:hover, .aui-button-light, .filter-actions, .aui-toolbar .toolbar-group .toolbar-trigger:hover, .filter-title .aui-button:hover, .tabs-menu .active-tab a, .aui-button-subtle:hover, .drop-menu, #issuetable .rowHeader .active, .ghx-selected, .project-item, .order-options:hover {
+		.aui-page-panel, .dashboard-item-content, input.long-field, .aui-badge, .issue-data-block:hover, .issue-data-block.focused, textarea:focus, .cm-input:focus, .editable-field:hover, .links-list > dd:hover, .ops:hover, .aui-button-light, .filter-actions, .aui-toolbar .toolbar-group .toolbar-trigger:hover, .filter-title .aui-button:hover, .tabs-menu .active-tab a, .aui-button-subtle:hover, .drop-menu, #issuetable .rowHeader .active, .ghx-selected, .project-item, .order-options:hover, .labels .lozenge {
 			background-color: #5d5d5d !important;
 		}
 
@@ -235,7 +231,7 @@ div.loading {
 	background: none !important;
 }
 
-.aui-header, .aui-item, .navigator-search, .issue-data-block, .tabs, .filter-panel-wrapper, .filter-panel-section, textarea, .aui-icon, .tabs > li > a, .tabs > li.active > strong, .aui-toolbar .toolbar-group .toolbar-trigger, .aui-toolbar .aui-dd-parent a.aui-dd-trigger, .ajs-layer, .aui-list-section, .issuerow > td, .dashboard-item-header, .dashboard-item-content, .aui-page-panel, .aui-inline-dialog-contents, .saved-search-operations .aui-button:hover, .jira-adbox, .filter-title .aui-button:hover, .user-hover-buttons a, .user-hover-buttons ul, .wiki-edit-toolbar, .aui-tabs, .save-options, .jira-dialog, .jira-dialog-heading, .issue-link-oauth-toggle, .form-footer, .drop-menu, input, #qf-field-picker-trigger, #ghx-content-main .ghx-column, #ghx-content-main .ghx-issue, .save-options .aui-button, #ghx-modes-tools .aui-button, .ghx-controls .aui-button, .ghx-controls-work .aui-button, #footer-comment-button, .dropdown-ready, .syntax-help-container, .aui-message, .aui-page-header-actions .aui-button, .aui-dropdown2, .aui-dropdown2-section, .aui-inline-dialog-contents > div, .order-options, .links-list dd{
+.aui-header, .aui-item, .navigator-search, .issue-data-block, .tabs, .filter-panel-wrapper, .filter-panel-section, textarea, .aui-icon, .tabs > li > a, .tabs > li.active > strong, .aui-toolbar .toolbar-group .toolbar-trigger, .aui-toolbar .aui-dd-parent a.aui-dd-trigger, .ajs-layer, .aui-list-section, .issuerow > td, .dashboard-item-header, .dashboard-item-content, .aui-page-panel, .aui-inline-dialog-contents, .saved-search-operations .aui-button:hover, .jira-adbox, .filter-title .aui-button:hover, .user-hover-buttons a, .user-hover-buttons ul, .wiki-edit-toolbar, .aui-tabs, .save-options, .jira-dialog, .jira-dialog-heading, .issue-link-oauth-toggle, .form-footer, .drop-menu, input, #qf-field-picker-trigger, #ghx-content-main .ghx-column, #ghx-content-main .ghx-issue, .save-options .aui-button, #ghx-modes-tools .aui-button, .ghx-controls .aui-button, .ghx-controls-work .aui-button, #footer-comment-button, .dropdown-ready, .syntax-help-container, .aui-message, .aui-page-header-actions .aui-button, .aui-dropdown2, .aui-dropdown2-section, .aui-inline-dialog-contents > div, .order-options, .links-list dd, .labels .lozenge {
 	border-color: #333333 !important;
 }
 
