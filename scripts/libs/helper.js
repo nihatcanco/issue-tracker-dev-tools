@@ -39,6 +39,7 @@
         previousBranchNameFormats: 'previousBranchNameFormats',
 
         workLogBoxVisible: 'workLogBoxVisible',
+        weeklyWorkLogQuery: 'weeklyWorkLogQuery',
         isWorkLogDivCollapsed: 'isWorkLogDivCollapsed',
 
         trimCopiedText: 'trimCopiedText',

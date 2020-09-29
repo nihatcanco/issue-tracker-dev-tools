@@ -2,6 +2,7 @@
 
     const console = global.console;
 
+    const weeklyWorkLogQueryDefault = 'currentUser()';
     const commitMessageFormatDefault = '{LOWERCASE}{TICKET_TYPE}{/LOWERCASE}({UPPERCASE}{TICKET_NUMBER}{/UPPERCASE}): {TICKET_SUMMARY}{NEWLINE}{NEWLINE}';
     const branchNameFormatDefault = '{LOWERCASE}{TICKET_TYPE}{/LOWERCASE}/{UPPERCASE}{TICKET_NUMBER}{/UPPERCASE}-';
 
@@ -68,7 +69,7 @@
                 });
 
                 chrome.tabs.insertCSS(tabId, { file: contentScriptCssContainerPath + contentScriptCssName }, function (result) {
-                    console.log('Injected ' + contentScriptCssContainerPath + contentScriptJsName + ' to ' + url);
+                    console.log('Injected ' + contentScriptCssContainerPath + contentScriptCssName + ' to ' + url);
                 });
 
             });
@@ -101,6 +102,7 @@
                 previousBranchNameFormats: result.previousBranchNameFormats != null ? result.previousBranchNameFormats : [branchNameFormatDefault],
 
                 workLogBoxVisible: result.workLogBoxVisible != null ? result.workLogBoxVisible : true,
+                weeklyWorkLogQuery: result.weeklyWorkLogQuery != null ? result.weeklyWorkLogQuery : weeklyWorkLogQueryDefault,
                 isWorkLogDivCollapsed: result.isWorkLogDivCollapsed != null ? result.isWorkLogDivCollapsed : false,
 
                 isDarkMode: false
