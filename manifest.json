@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Issue Tracker Dev Tools",
-  "version": "1.0.0.3",
+  "version": "1.0.0.4",
   "author": "Nihatcan Colpan",
   "description": "A Google Chrome extension that contains dev tools for issue tracker systems.",
   "homepage_url": "https://github.com/nihatcanco/issue-tracker-dev-tools",

@@ -76,6 +76,25 @@
 
             <div class="col-md-12">
 
+                <h5 class="cm-card-header">Weekly Work Log Query</h5>
+                <div class="card mb-4">
+                    <div id="cm-alert-weekly-work-log-box-visibility" class="alert alert-warning" role="alert">
+                        Reminder: Weekly Work Log Box is hidden!
+                    </div>
+                    <div class="card-body">
+                        <h6>Current User to Query:</h6>
+                        <span id="cm-weekly-work-log-default">(assignee = currentUser() OR reporter = currentUser()) AND worklogDate >= startOfWeek() ORDER BY issuekey ASC</span>
+                        <br>
+                        <br>
+                        <h6>Change User to Query:</h6>
+                        <input id="cm-input-weekly-work-log-query" type="text" class="form-control">
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-md-12">
+
                 <h5 class="cm-card-header">Commit Message Format</h5>
                 <div class="card mb-4">
                     <div id="cm-alert-commit-message-box-visibility" class="alert alert-warning" role="alert">
