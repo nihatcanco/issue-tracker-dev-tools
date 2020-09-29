@@ -95,7 +95,6 @@
             selectPreviousBranchNameFormats.dispatchEvent(new global.Event('change'));
             
             spanWeeklyWorkLogDefault.innerHTML = weeklyWorkLogQuery;
-            inputWeeklyWorkLogQuery.dispatchEvent(new global.Event('keyup'));
 
         });
 
