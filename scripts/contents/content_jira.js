@@ -390,7 +390,7 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
 
                 buttonShowIssues.addEventListener('click', function () {
                     // Show the calculated issues in Jira
-                    window.open(window.location.origin + '/issues/?jql=(assignee%20=%20' + options.workLogBox.defaultQuery + '%20OR%20reporter%20=%20' + options.workLogBox.defaultQuery + ')%20AND%20worklogDate%20%3E=%20' + global.DateToJqlString(startDate) + '%20ORDER%20BY%20issuekey%20ASC', '_blank').focus();
+                    window.open(window.location.origin + '/issues/?jql=(assignee%20=%20currentUser()%20OR%20reporter%20=%20currentUser()%20OR%20worklogAuthor%20=%20currentUser())%20AND%20worklogDate%20%3E=%20' + global.DateToJqlString(startDate) + '%20ORDER%20BY%20issuekey%20ASC', '_blank').focus();
                 });
 
             }
@@ -412,7 +412,7 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
                 contentTextElement.innerHTML = 'Loading...';
 
                 // Calculate the worklog for the current week
-                global.GetJSON(window.location.origin + '/rest/api/latest/search?jql=(assignee%20=%20' + options.workLogBox.defaultQuery + '%20OR%20reporter%20=%20' + options.workLogBox.defaultQuery + ')%20AND%20worklogDate%20%3E=%20' + global.DateToJqlString(startDate) + '%20ORDER%20BY%20issuekey%20ASC',
+                global.GetJSON(window.location.origin + '/rest/api/latest/search?jql=(assignee%20=%20currentUser()%20OR%20reporter%20=%20currentUser()%20OR%20worklogAuthor%20=%20currentUser())%20AND%20worklogDate%20%3E=%20' + global.DateToJqlString(startDate) + '%20ORDER%20BY%20issuekey%20ASC',
                     function (err, data) {
 
                         issueCount = data.issues.length;
