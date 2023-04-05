@@ -103,7 +103,9 @@
                 weeklyWorkLogQuery: result.weeklyWorkLogQuery != null ? result.weeklyWorkLogQuery : weeklyWorkLogQueryDefault,
                 isWorkLogDivCollapsed: result.isWorkLogDivCollapsed != null ? result.isWorkLogDivCollapsed : false,
 
-				isDarkMode: false
+				isDarkMode: false,
+
+				hoursInADay: result.hoursInADay != null ? result.hoursInADay : 8 // a default JIRA day is 8h
 
 			});
 

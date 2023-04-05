@@ -26,6 +26,7 @@
     const checkboxShowBranchNameBox = document.getElementById('cm-checkbox-show-branch-name-box');
     const checkboxTrimOnCopy = document.getElementById('cm-checkbox-trim-on-copy');
     const checkboxEnableDarkMode = document.getElementById('cm-checkbox-dark-mode');
+    const inputHoursInADay = document.getElementById('cm-input-hours-in-a-day');
     const alertWeeklyWorkLogBoxVisibility = document.getElementById('cm-alert-weekly-work-log-box-visibility');
     const alertCommitMessageBoxVisibility = document.getElementById('cm-alert-commit-message-box-visibility');
     const alertBranchNameBoxVisibility = document.getElementById('cm-alert-branch-name-box-visibility');
@@ -52,12 +53,13 @@
             spanTitleText.innerHTML = '<small>for</small> ' + global.Manifest.name;
             spanFooterText.innerHTML = global.Manifest.name + ' v' + global.Manifest.version + '<br><a href="' + global.Manifest.homepage_url + '" target="_blank" style="color: white;">Github</a>';
 
-            // Set checkboxes
+            // Set checkboxes and options
             checkboxShowWorkLogBox.checked = result.workLogBoxVisible;
             checkboxShowCommitMessageBox.checked = result.commitMessageBoxVisible;
             checkboxShowBranchNameBox.checked = result.branchNameBoxVisible;
             checkboxTrimOnCopy.checked = result.trimCopiedText;
             checkboxEnableDarkMode.checked = result.isDarkMode;
+            inputHoursInADay.value = result.hoursInADay;
 
             // Set previous format selects
             let previousCommitMessageFormatInnerHtml = '';
@@ -244,7 +246,8 @@
                     branchNameBoxVisible: checkboxShowBranchNameBox.checked,
                     previousBranchNameFormats: result.previousBranchNameFormats,
                     trimCopiedText: checkboxTrimOnCopy.checked,
-                    isDarkMode: checkboxEnableDarkMode.checked
+                    isDarkMode: checkboxEnableDarkMode.checked,
+                    hoursInADay: inputHoursInADay.value
                 }, function () {
                     alert('Options saved! Please reload your page to see the changes.');
                     window.location.reload();
