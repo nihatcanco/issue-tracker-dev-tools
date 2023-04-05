@@ -48,6 +48,17 @@
     };
 
     /**
+     * Returns the JIRA username (i.e. 'user.name')
+     * @param {*} document 
+     * @returns 
+     */
+    global.GetCurrentUserName = function (document) {
+
+        var element = document.getElementById('header-details-user-fullname');
+        return element.dataset.username;
+    };
+
+    /**
      * Formats the given commit message with the given format string.
      * @param {string} commitMessageFormat
      * @param {any} selectedTicket
@@ -161,11 +172,11 @@
 
     };
 
-	/**
-	 * Gets JSON result from the given URL.
-	 * @param {any} url
-	 * @param {any} callback
-	 */
+    /**
+     * Gets JSON result from the given URL.
+     * @param {any} url
+     * @param {any} callback
+     */
     global.GetJSON = function (url, callback) {
         var xhr = new XMLHttpRequest();
         xhr.open('GET', url, true);
@@ -181,9 +192,9 @@
         xhr.send();
     };
 
-	/**
-	 * Returns the monday of the current week
-	 * */
+    /**
+     * Returns the monday of the current week
+     * */
     global.GetMondayOfCurrentWeek = function () {
         var d = new Date();
         var day = d.getDay();

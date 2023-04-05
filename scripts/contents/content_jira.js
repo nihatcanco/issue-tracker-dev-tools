@@ -398,6 +398,7 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
             function setData(dateString = 'startOfWeek()') {
 
                 let date = new Date(dateString);
+                let userName = global.GetCurrentUserName(document);
 
                 if (dateString === 'startOfWeek()') {
                     startDate = global.GetMondayOfCurrentWeek();
@@ -416,14 +417,14 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
                     function (err, data) {
 
                         issueCount = data.issues.length;
-                        getAllTicketWorklogsForTheCurrentWeek(data.issues);
+                        getAllTicketWorklogsForTheCurrentWeek(data.issues, userName);
 
                     }
                 );
 
             }
 
-            function getAllTicketWorklogsForTheCurrentWeek(issues) {
+            function getAllTicketWorklogsForTheCurrentWeek(issues, userName) {
 
                 if (issues !== null && issues.length > 0 && issues[0] !== null) {
 
@@ -434,14 +435,16 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
 
                             for (let j = 0; j < data1.fields.worklog.worklogs.length; j++) {
 
-                                if (startDate <= new Date(data1.fields.worklog.worklogs[j].started)) {
-                                    lastWeekWorkLogCountAsSeconds += data1.fields.worklog.worklogs[j].timeSpentSeconds;
+                                let worklog = data1.fields.worklog.worklogs[j];
+
+                                if (worklog.author.name == userName && startDate <= new Date(worklog.started)) {
+                                    lastWeekWorkLogCountAsSeconds += worklog.timeSpentSeconds;
                                 }
 
                             }
 
                             issues.shift(); // remove the first element
-                            getAllTicketWorklogsForTheCurrentWeek(issues); // switch to the next element
+                            getAllTicketWorklogsForTheCurrentWeek(issues, userName); // switch to the next element
 
                         }
                     );
