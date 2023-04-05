@@ -44,7 +44,9 @@
 
         trimCopiedText: 'trimCopiedText',
 
-        isDarkMode: 'isDarkMode'
+        isDarkMode: 'isDarkMode',
+
+        hoursInADay: 'hoursInADay'
     };
 
     /**

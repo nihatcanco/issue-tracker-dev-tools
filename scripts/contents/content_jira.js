@@ -455,19 +455,26 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
 
                     let totalHours = lastWeekWorkLogCountAsSeconds / 3600; // convert from seconds to hours
 
-                    let contentTextInnerHtmlText =
-                        totalHours + ' hours || ' + parseInt(totalHours / 8) + 'd ' + (totalHours % 8) + 'h' +
-                        '<br>' +
-                        '<small><i>' +
-                        issueCount + ' issues in total' +
-                        ' || ' +
-                        'starting from: ' + global.GetFormattedDateString(startDate) +
-                        '</i></small>';
+                    global.GetOptions([global.OptionsArray.hoursInADay], function (result) {
 
-                    contentTextElement.innerHTML = contentTextInnerHtmlText;
+                        let hoursInADay = result.hoursInADay;
 
-                    issueCount = 0; // reset the count
-                    lastWeekWorkLogCountAsSeconds = 0; // reset the sum
+                        let contentTextInnerHtmlText =
+                            totalHours + ' hours || ' + parseInt(totalHours / hoursInADay) + 'd ' + (totalHours % hoursInADay) + 'h' + ' <small>(1d=' + hoursInADay + 'h)</small>' +
+                            '<br>' +
+                            '<small><i>' +
+                            issueCount + ' issues in total' +
+                            ' || ' +
+                            'starting from: ' + global.GetFormattedDateString(startDate) +
+                            '</i></small>';
+
+                        contentTextElement.innerHTML = contentTextInnerHtmlText;
+
+                        issueCount = 0; // reset the count
+                        lastWeekWorkLogCountAsSeconds = 0; // reset the sum
+
+                    });
+
                 }
 
             }
